@@ -2,10 +2,11 @@
   "name": "rnide",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
-    "build": "webpack --save production"
+    "build": "webpack --save production",
+    "electron": "electron ."
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.2",
+    "electron": "^3.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "prop-types": "^15.6.2",
@@ -23,5 +25,6 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.9"
-  }
+  },
+  "dependencies": {}
 }
