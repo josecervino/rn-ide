@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "webpack-dev-server --open --mode development",
+    "start": "./node_modules/.bin/webpack",
     "build": "webpack --save production",
     "electron": "electron ."
   },
@@ -28,6 +28,10 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
-    "monaco-editor": "^0.14.3"
+    "monaco-editor": "^0.14.2",
+    "css-loader": "^1.0.0",
+    "style-loader": "^0.22.1",
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0"
   }
 }
