@@ -1,4 +1,3 @@
-// import FormContainer from "./js/components/container/FormContainer";
 
 import * as monaco from 'monaco-editor';
 const fs = window.require('fs');
@@ -32,7 +31,7 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 });
 
 
-// In renderer process (web page).
+// In renderer process (web page)
 
 // create save button
 let saveButton = document.createElement('button')
