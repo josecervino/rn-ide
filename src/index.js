@@ -1,6 +1,7 @@
-// import FormContainer from "./js/components/container/FormContainer";
 
 import * as monaco from 'monaco-editor';
+const fs = window.require('fs');
+const {ipcRenderer, dialog} = require('electron')
 
 self.MonacoEnvironment = {
 	getWorkerUrl: function (moduleId, label) {
@@ -20,11 +21,6 @@ self.MonacoEnvironment = {
 	}
 }
 
-let button = document.createElement('button');
-button.innerHTML = 'save';
-button.onclick = saveText;
-let body = document.getElementsByTagName('body')[0];
-body.appendChild(button)
 const editor = monaco.editor.create(document.getElementById('container'), {
 	value: [
 		'function x() {',
@@ -34,8 +30,35 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 	language: 'javascript'
 });
 
-function saveText (){
-	console.log(editor.getValue());
+
+// In renderer process (web page)
+
+// create save button
+let saveButton = document.createElement('button')
+saveButton.innerHTML = 'save';
+saveButton.onclick = saveText;
+let body = document.getElementsByTagName('body')[0];
+body.prepend(saveButton)
+
+function saveText() {
+	ipcRenderer.send('save-button-clicked', editor.getValue())
 }
 
-// saveText()
+// create open button
+let openButton = document.createElement('button')
+openButton.innerHTML = 'open';
+openButton.onclick = openText;
+body = document.getElementsByTagName('body')[0];
+body.prepend(openButton)
+
+function openText() {
+	ipcRenderer.send('open-button-clicked')
+}
+
+// display the opened file in text editor
+ipcRenderer.on('open-button-clicked', (event, arg) => {
+	editor.setValue(arg)
+})
+
+
+
