@@ -1,5 +1,6 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, shell, dialog, ipcMain} = require('electron')
+const fs = require('fs')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -11,6 +12,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadFile('./dist/index.html')
+
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -25,6 +27,50 @@ function createWindow () {
 }
 
 console.log('running main.js')
+
+// In main process.
+
+// listener for save button
+ipcMain.on('save-button-clicked', (event, arg) => {
+  
+  dialog.showSaveDialog((fileName) => {
+    if (fileName === undefined){
+      console.log("You didn't save the file");
+      return;
+    }
+    
+    // save data from text editor to file
+    fs.writeFile(fileName, arg, (err) => {
+      if(err){
+        console.log("An error occurred creating the file "+ err.message)
+      }
+      // console.log("File successfully saved.");
+    });
+  })
+}); 
+
+// listener for open button 
+ipcMain.on('open-button-clicked', (event) => {
+  dialog.showOpenDialog((fileNames) => {
+    if (fileNames === undefined){
+      console.log("You didn't save the file");
+      return;
+    }
+
+    // open file in text editor
+    fs.readFile(fileNames[0], 'utf-8', (err, data) => {
+      if(err){
+        alert("An error ocurred reading the file :" + err.message);
+        return;
+      }
+      event.sender.send('open-button-clicked', data)
+      
+      // Change how to handle the file content
+      console.log("The file content is : " + data);
+    });
+  }); 
+});
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

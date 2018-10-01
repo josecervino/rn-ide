@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "./node_modules/.bin/webpack",
+    "start": "./node_modules/.bin/webpack; npm run electron",
     "build": "webpack --save production",
     "electron": "electron ."
   },

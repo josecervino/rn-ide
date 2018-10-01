@@ -37,6 +37,10 @@ const webpack = require("webpack");
 
 module.exports = {
 	mode: 'development',
+	node: {
+		fs: 'empty'
+	},
+	target: 'electron-main',
 	entry: {
 		"app": './src/index.js',
 		"editor.worker": 'monaco-editor/esm/vs/editor/editor.worker.js',
