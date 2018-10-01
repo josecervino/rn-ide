@@ -20,7 +20,12 @@ self.MonacoEnvironment = {
 	}
 }
 
-monaco.editor.create(document.getElementById('container'), {
+let button = document.createElement('button');
+button.innerHTML = 'save';
+button.onclick = saveText;
+let body = document.getElementsByTagName('body')[0];
+body.appendChild(button)
+const editor = monaco.editor.create(document.getElementById('container'), {
 	value: [
 		'function x() {',
 		'\tconsole.log("Whatup world!");',
@@ -28,3 +33,9 @@ monaco.editor.create(document.getElementById('container'), {
 	].join('\n'),
 	language: 'javascript'
 });
+
+function saveText (){
+	console.log(editor.getValue());
+}
+
+// saveText()
