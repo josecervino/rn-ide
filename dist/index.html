@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+	 crossorigin="anonymous">
+	<link rel="stylesheet" href="../public/styles.css">
+	<script src="../public/renderer/renderer.js"></script>
 </head>
+
 <body>
+	<div id="container" style="width:800px;height:600px;border:1px solid #ccc"></div>
+	<div id="root"></div>
+	<div id="listed-files"></div>
+	<div id="display-files"></div>
+	<input type="button" id="btn-updatefile" value="update file" onclick="userFile('')" />
 
-<div id="container" style="width:800px;height:600px;border:1px solid #ccc"></div>
-<script src="../dist/app.bundle.js"></script>
-
+	<script src="../dist/app.bundle.js"></script>
 </body>
+
 </html>

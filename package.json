@@ -1,12 +1,14 @@
 {
-  "name": "rnide",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
-  "scripts": {
-    "start": "./node_modules/.bin/webpack; npm run electron",
-    "build": "webpack --save production",
-    "electron": "electron ."
+"name": "rnide",
+"version": "1.0.0",
+"description": "",
+"main": "main.js",
+"scripts": {
+  "start": "./node_modules/.bin/webpack; npm run electron",
+  "build": "webpack --save production react-scripts",
+  "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "keywords": [],
   "author": "",
@@ -25,13 +27,21 @@
     "react-dom": "^16.5.2",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.1.9"
+    "webpack-dev-server": "^3.1.9",
+    "react-scripts": "1.1.5",
+    "electron-builder": "^20.28.4",
+    "electron-is-dev": "^1.0.1"
   },
   "dependencies": {
     "monaco-editor": "^0.14.2",
     "css-loader": "^1.0.0",
     "style-loader": "^0.22.1",
     "webpack": "^4.16.5",
-    "webpack-cli": "^3.1.0"
+    "webpack-cli": "^3.1.0",
+    "concurrently": "^4.0.1",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-treebeard": "^3.1.0",
+    "wait-on": "^3.0.1"
   }
 }

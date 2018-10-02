@@ -1,0 +1,39 @@
+.shortcut {
+  padding: 2px;
+  display: block;
+  cursor: default;
+}
+
+.shortcut:hover {
+  background: #00abff;
+  color: white;
+}
+
+.displayed-files {
+  padding: 5px;
+  cursor: default;
+}
+
+.displayed-files:hover {
+  background: #47d43f;
+  color: white;
+}
+
+.row {
+  /*text-align: center;*/
+  align-content: center;
+  align-items: center;
+}
+
+li {
+  cursor: pointer;
+  padding: 6px;
+  list-style: none;
+  color: #47d43f;
+}
+i {
+  padding-right: 10px;
+}
+input {
+  cursor: pointer;
+}
