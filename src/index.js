@@ -30,7 +30,6 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 	language: 'javascript'
 });
 
-
 // In renderer process (web page)
 
 // create save button
@@ -59,6 +58,18 @@ function openText() {
 ipcRenderer.on('open-button-clicked', (event, arg) => {
 	editor.setValue(arg)
 })
+
+// display selected file from menu in text editor
+ipcRenderer.on('open-file', (event, arg) => {
+	editor.setValue(arg)
+	console.log(arg);
+})
+
+// listen for main process prompt to save file
+ipcRenderer.on('save-file', (event, arg) => {
+	ipcRenderer.send('save-file', editor.getValue())
+})
+
 
 
 

@@ -8,58 +8,42 @@
 </head>
 
 <body>
+<!-- <div id="container" style="height:100%;"></div> -->
+  <h1>Monaco Editor in Electron!</h1>
+  <button id="saveFile" onClick="saveFile();" type="button">SAVE ME</button>
+  <button id="openFile" onClick="openFile();" type="button">OPEN FILE</button>
 
-    <body>
-      <!-- <div id="container" style="height:100%;"></div> -->
-        <h1>Monaco Editor in Electron!</h1>
-        <button id="saveFile" onClick="saveFile();" type="button">SAVE ME</button>
-        <button id="openFile" onClick="openFile();" type="button">OPEN FILE</button>
-      
-    
-      </body>
-    
-      <script>
-      (function() {
-        const path = require('path');
-        const amdLoader = require('../node_modules/monaco-editor/min/vs/loader.js');
-        const amdRequire = amdLoader.require;
-        const amdDefine = amdLoader.require.define;
-        function uriFromPath(_path) {
-          var pathName = path.resolve(_path).replace(/\\/g, '/');
-          if (pathName.length > 0 && pathName.charAt(0) !== '/') {
-            pathName = '/' + pathName;
-          }
-          return encodeURI('file://' + pathName);
+  <script>
+    (function() {
+      const path = require('path');
+      const amdLoader = require('../node_modules/monaco-editor/min/vs/loader.js');
+      const amdRequire = amdLoader.require;
+      const amdDefine = amdLoader.require.define;
+      function uriFromPath(_path) {
+        var pathName = path.resolve(_path).replace(/\\/g, '/');
+        if (pathName.length > 0 && pathName.charAt(0) !== '/') {
+          pathName = '/' + pathName;
         }
-        amdRequire.config({
-          baseUrl: uriFromPath(path.join(__dirname, '../node_modules/monaco-editor/min'))
+        return encodeURI('file://' + pathName);
+      }
+      amdRequire.config({
+        baseUrl: uriFromPath(path.join(__dirname, '../node_modules/monaco-editor/min'))
+      });
+      // workaround monaco-css not understanding the environment
+      self.module = undefined;
+      amdRequire(['vs/editor/editor.main'], function() {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: [
+            'function x() {',
+            '\tconsole.log("Hello world!");',
+            '}'
+          ].join('\n'),
+          language: 'javascript'
         });
-        // workaround monaco-css not understanding the environment
-        self.module = undefined;
-        amdRequire(['vs/editor/editor.main'], function() {
-          var editor = monaco.editor.create(document.getElementById('container'), {
-            value: [
-              'function x() {',
-              '\tconsole.log("Hello world!");',
-              '}'
-            ].join('\n'),
-            language: 'javascript'
-          });
-        });
-      })();
-      </script>
+      });
+    })();
+  </script>
 
-
-
-  <div class="container">
-    <div class="row mt-5">
-      <div class="col-md-4 offset-md-1">
-        <p>Create a new article</p>
-        <div id="create-article-form">
-          <!-- form -->
-        </div>
-      </div>
-    </div>
-  </div>
+</body>
 
 </html>
