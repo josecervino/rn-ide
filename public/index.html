@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- script link https://ourcodeworld.com/articles/read/106/how-to-choose-read-save-delete-or-create-a-file-with-electron-framework -->
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <title>RN IDE</title>
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="./styles.css">
+  <!--We load this script here to allow the readFolder method to appear to the DOM...We also load the same script at the bottom, to let the script include the DOM it its execution, once the DOM loads. I haven't found a better solution for this problem, but now, eliminating one of the loading statements is causing problems for the app Bear with me.-->
+  <script src="./renderer/renderer.js"></script>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root"></div>
+  <div class="shortcut" onclick="readFolder('/');">
+    <i class="fa fa-anchor" aria-hidden="true"></i> Root</div>
+  <div class="shortcut" onclick="readFolder('/Users/')">
+    <i class="fa fa-users" aria-hidden="true"></i> Users</div>
+  <div id="listed-files"></div>
+
+  <div id="display-files"></div>
+
+  <input type="button" id="btn-updatefile" value="update file" onclick="userFile('')" />
+
+</body>
+
+
+</html>
