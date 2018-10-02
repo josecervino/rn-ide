@@ -50,7 +50,6 @@ function openText() {
 }
 
 // display the opened file in text editor
-<<<<<<< HEAD
 ipcRenderer.on('open-button-clicked', (event, arg) => {
 	editor.setValue(arg)
 })
@@ -67,11 +66,6 @@ ipcRenderer.on('save-file', (event, arg) => {
 })
 
 
-=======
-ipcRenderer.on("open-button-clicked", (event, arg) => {
-  editor.setValue(arg);
-});
->>>>>>> 79c3240a769fd9db92c58991276249e9b72b20d9
 
 // import React from "react";
 // import ReactDOM from "react-dom";
