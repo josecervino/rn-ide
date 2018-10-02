@@ -1,20 +1,26 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
-import "./App.css";
-// import TreeExample from "./menu/mainmenu.js";
+import "./App.css"; 
+import TreeContainer from './filetree/TreeContainer';
+import EditorContainer from './editor/editorContainer';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
 
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className='editor'>
+          <EditorContainer />
+        </div>
+
+        <div className='tree'>
+          <TreeContainer />
+        </div>
+
+        <div className='footer'>
+          <p> Footer. </p>
+        </div>
+
       </div>
     );
   }

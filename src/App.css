@@ -1,25 +1,30 @@
 .App {
   text-align: center;
+  display: grid;
+  width: 100%;
+  grid-template-areas:'tree editor editor editor editor'
+                      'tree editor editor editor editor'
+                      'tree editor editor editor editor'
+                      'footer footer footer footer footer';
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr) 25px;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.editor {
+  grid-area: editor;
+  height: 75vh;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.tree {
+  grid-area: tree;
+  background: #61616157;
+  overflow-y: scroll;
+  max-height: 75vh;
 }
 
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
+.footer {
+  grid-area: footer;
+  background: #747474;
 }
 
 @media screen and (max-height: 450px) {
@@ -30,7 +35,6 @@
     font-size: 18px;
   }
 }
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
