@@ -1,5 +1,12 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, shell, dialog, ipcMain} = require('electron')
+const {
+  app, 
+  BrowserWindow, 
+  Menu,
+  shell, 
+  dialog, 
+  ipcMain
+} = require('electron')
 const fs = require('fs')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -13,9 +20,8 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadFile('./dist/index.html')
 
-
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -24,6 +30,150 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+}
+
+// create menu 
+
+const openFile = function(fileNames) {
+  dialog.showOpenDialog((fileNames) => {
+    if (fileNames === undefined) {
+      console.log("You didn't save the file");
+      return;
+    }
+
+    // open file in text editor
+    fs.readFile(fileNames[0], 'utf-8', (err, data) => {
+      if(err){
+        alert("An error ocurred reading the file :" + err.message);
+        return;
+      }
+      mainWindow.webContents.send('open-file', data);
+      
+      // Change how to handle the file content
+      console.log("The file content is : " + data);
+    });
+  });
+};
+
+const saveFile = function(fileNames) {
+  dialog.showSaveDialog((fileName) => {
+    if (fileName === undefined){
+      console.log("You didn't save the file");
+      return;
+    }
+    mainWindow.webContents.send('save-file');
+    
+    ipcMain.on('save-file', (event, arg) => {
+      // save data from text editor to file
+      fs.writeFile(fileName, arg, (err) => {
+        if(err){
+          console.log("An error occurred creating the file "+ err.message)
+        }
+        console.log("File successfully saved.");
+      });
+    }); 
+  })
+};
+
+const menuTemplate = [
+  {
+    label: 'File',
+    submenu: [{
+      label: 'Open!',
+      click: () => { openFile(); }
+    },
+    {
+      label: 'Save!',
+      click: () => { saveFile(); }
+    }],
+  },
+  
+  
+  {
+    label: 'Edit',
+    submenu: [
+      {role: 'undo'},
+      {role: 'redo'},
+      {type: 'separator'},
+      {role: 'cut'},
+      {role: 'copy'},
+      {role: 'paste'},
+      {role: 'pasteandmatchstyle'},
+      {role: 'delete'},
+      {role: 'selectall'}
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      {role: 'reload'},
+      {role: 'forcereload'},
+      {role: 'toggledevtools'},
+      {type: 'separator'},
+      {role: 'resetzoom'},
+      {role: 'zoomin'},
+      {role: 'zoomout'},
+      {type: 'separator'},
+      {role: 'togglefullscreen'}
+    ]
+  },
+  {
+    role: 'window',
+    submenu: [
+      {role: 'minimize'},
+      {role: 'close'}
+    ]
+  },
+  {
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More',
+        click () { require('electron').shell.openExternal('https://electronjs.org') }
+      }
+    ]
+  }
+]
+
+if (process.platform === 'darwin') {
+  menuTemplate.unshift({
+    label: app.getName(),
+    submenu: [
+      {role: 'about'},
+      {type: 'separator'},
+      {role: 'services', submenu: []},
+      {type: 'separator'},
+      {role: 'hide'},
+      {role: 'hideothers'},
+      {role: 'unhide'},
+      {type: 'separator'},
+      {role: 'quit'}
+    ]
+  })
+
+  // Edit menu
+  menuTemplate[1].submenu.push(
+    {type: 'separator'},
+    {
+      label: 'Speech',
+      submenu: [
+        {role: 'startspeaking'},
+        {role: 'stopspeaking'}
+      ]
+    }
+  )
+
+  // Window menu
+  menuTemplate[3].submenu = [
+    {role: 'close'},
+    {role: 'minimize'},
+    {role: 'zoom'},
+    {type: 'separator'},
+    {role: 'front'}
+  ]
 }
 
 console.log('running main.js')
@@ -70,7 +220,6 @@ ipcMain.on('open-button-clicked', (event) => {
     });
   }); 
 });
-
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

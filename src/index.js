@@ -50,6 +50,23 @@
 // function openText() {
 //   ipcRenderer.send("open-button-clicked");
 // }
+// display the opened file in text editor
+ipcRenderer.on('open-button-clicked', (event, arg) => {
+	editor.setValue(arg)
+})
+
+// display selected file from menu in text editor
+ipcRenderer.on('open-file', (event, arg) => {
+	editor.setValue(arg)
+	console.log(arg);
+})
+
+// listen for main process prompt to save file
+ipcRenderer.on('save-file', (event, arg) => {
+	ipcRenderer.send('save-file', editor.getValue())
+})
+
+
 
 // // display the opened file in text editor
 // ipcRenderer.on("open-button-clicked", (event, arg) => {
