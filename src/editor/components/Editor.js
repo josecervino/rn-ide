@@ -1,11 +1,7 @@
 import React from 'react';
-
-
-//monico
 import * as monaco from "monaco-editor";
 const fs = window.require("fs"); 
 const { ipcRenderer, dialog } = require("electron");
- //end monaco
 
  
  class Editor extends React.Component {
@@ -13,7 +9,7 @@ const { ipcRenderer, dialog } = require("electron");
      self.MonacoEnvironment = {
 
   getWorkerUrl: function(moduleId, label) {
-    if (label === "json") { // what is label?
+    if (label === "json") {
       return "../dist/json.worker.bundle.js";
     }
     if (label === "css") {
@@ -29,7 +25,7 @@ const { ipcRenderer, dialog } = require("electron");
   }
 };
 
-  const editor = monaco.editor.create(document.getElementById("editor-container"), {
+  const monacoEditor = monaco.editor.create(document.getElementById("editor-container"), {
           value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join("\n"),
           language: "javascript"
       });

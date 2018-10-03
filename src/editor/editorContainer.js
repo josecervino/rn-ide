@@ -5,7 +5,6 @@ class EditorContainer extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <p>This is the EditorContainer Component.</p>
         <Editor />
       </React.Fragment>
     )

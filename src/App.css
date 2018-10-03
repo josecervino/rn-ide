@@ -13,6 +13,11 @@
 .editor {
   grid-area: editor;
   height: 75vh;
+  border : 1px solid red;
+}
+#editor-container {
+  height: 100%;
+  width: 100%;
 }
 
 .tree {
@@ -25,21 +30,4 @@
 .footer {
   grid-area: footer;
   background: #747474;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {
-    padding-top: 15px;
-  }
-  .sidenav a {
-    font-size: 18px;
-  }
-}
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

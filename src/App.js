@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css"; 
 import TreeContainer from './filetree/TreeContainer';
 import EditorContainer from './editor/editorContainer';
+
 
 class App extends Component {
   render() {
