@@ -11,7 +11,7 @@ const fs = require('fs')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
 
 function createWindow () {
   // Create the browser window.
@@ -197,9 +197,9 @@ ipcMain.on('save-button-clicked', (event, arg) => {
       // console.log("File successfully saved.");
     });
   })
-}); 
+});
 
-// listener for open button 
+// listener for open button
 ipcMain.on('open-button-clicked', (event) => {
   dialog.showOpenDialog((fileNames) => {
     if (fileNames === undefined){
