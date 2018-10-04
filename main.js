@@ -35,8 +35,9 @@ function createWindow () {
   Menu.setApplicationMenu(menu);
 }
 
-// create menu 
 
+
+//  FOLDER & FILE FUNCITONS -----------------------------
 const openFile = function(fileNames) {
   dialog.showOpenDialog((fileNames) => {
     if (fileNames === undefined) {
@@ -77,6 +78,11 @@ const saveFile = function(fileNames) {
     }); 
   })
 };
+
+
+
+
+//  MENU TEMPLATE FUNCITONS -----------------------------
 
 const menuTemplate = [
   {
@@ -176,7 +182,9 @@ if (process.platform === 'darwin') {
   ]
 }
 
-console.log('running main.js')
+
+
+//  EVENT LISTENERS -----------------------------
 
 // In main process.
 
@@ -220,6 +228,12 @@ ipcMain.on('open-button-clicked', (event) => {
     });
   }); 
 });
+
+// ipcMain.on()
+
+
+
+//  APP FUNCITONS -----------------------------
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

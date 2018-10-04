@@ -68,7 +68,11 @@ function readFolder(path) {
     }
   });
 }
+
 //open the file with the default app
 function openFile(path) {
-  shell.openItem(path);
+  // shell.openItem(path);
+
+  // send an event to the main process to trigger
+  ipcRenderer.send()
 }
