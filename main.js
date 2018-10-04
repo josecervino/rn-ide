@@ -58,16 +58,28 @@ const openFile = function(fileNames) {
   });
 };
 
-const saveFile = function(fileNames) {
+const saveAs = function(fileNames) {
   dialog.showSaveDialog(fileName => {
     if (fileName === undefined) {
       console.log("You didn't save the file");
       return;
     }
-    mainWindow.webContents.send("save-file");
+    saveFile(fileName);
+  });
+};
 
-    ipcMain.on("save-file", (event, arg) => {
-      console.log("args", arg);
+const saveFile = function(fileName) {
+  mainWindow.webContents.send("save-file");
+
+  ipcMain.on("save-file", (event, arg, currentFileName) => {
+    // save data from text editor to file
+    fs.writeFile(fileName ? fileName : currentFileName, arg, err => {
+      console.log({ fileName });
+      console.log({ currentFileName });
+      if (err) {
+        console.log("An error occurred creating the file " + err.message);
+      }
+      console.log("File successfully saved.");
     });
   });
 };
@@ -75,6 +87,30 @@ const saveFile = function(fileNames) {
 const menuTemplate = [
   {
     label: "File",
+    submenu: [
+      {
+        label: "Open!",
+        click: () => {
+          openFile();
+        }
+      },
+      {
+        label: "Save as...",
+        click: () => {
+          saveAs();
+        }
+      },
+      {
+        label: "Save",
+        click: () => {
+          saveFile();
+        }
+      }
+    ]
+  },
+
+  {
+    label: "Edit",
     submenu: [
       {
         label: "Open!",

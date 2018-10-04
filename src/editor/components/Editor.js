@@ -39,7 +39,6 @@ class Editor extends React.Component {
 
     // // display selected file from menu in text editor
     ipcRenderer.on("open-file", (event, arg, filename) => {
-      console.log("filename", filename);
       this.props.getFileName(filename);
 
       this.props.editor.setValue(arg);
@@ -48,6 +47,8 @@ class Editor extends React.Component {
 
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
+      console.log("filename", this.props.filename);
+
       ipcRenderer.send(
         "save-file",
         this.props.editor.getValue(),
