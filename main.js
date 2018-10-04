@@ -3,12 +3,8 @@ const {
   app,
   BrowserWindow,
   Menu,
-<<<<<<< HEAD
-  dialog, 
-=======
   shell,
   dialog,
->>>>>>> deb510a763c761c65687634113a9131e28a13cad
   ipcMain
 } = require("electron");
 const fs = require("fs");
@@ -117,7 +113,7 @@ const menuTemplate = [
       {
         label: 'Inject!',
         click: () => { injectText(); }
-      }]
+      }
     ]
   },
 

@@ -31,7 +31,7 @@ class Editor extends React.Component {
         value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join(
           "\n"
         ),
-        language: "javascript"
+        language: "javascript",
         theme: 'vs-dark',
         dragAndDrop: true,
         fontFamily: "monaco",
@@ -54,7 +54,7 @@ class Editor extends React.Component {
       let op = {
         identifier: id, 
         range: range, 
-        text: "<Icon \n\tname='rowing' />", 
+        text: "<Icon \n\tname='JoelReduxMaster' />", 
         forceMoveMarkers: true
       };
       monacoEditor.executeEdits("my-source", [op]);
