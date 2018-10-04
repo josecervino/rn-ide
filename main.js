@@ -68,26 +68,26 @@ const openFile = function(fileNames) {
 };
 
 // IN THE PROCESS OF SETTING UP LISTENER FOR OPENING FILE IN EDITOR
-// function openFileClick(fileName) {
-//   console.log('inside openFileClick');
-//   console.log('openFileClick filename:', fileName);
-//     // open file in text editor
-//     fs.readFile(fileName, 'utf-8', (err, data) => {
-//       console.log('data in openFileClick:', data);
-//       if (err) {
-//         console.log('main.js error found', err);
-//         // alert("An error ocurred reading the file :" + err.message);
-//         return;
-//       }
-//       console.log('About to invoke mainWindow.webContents.send()');
-//       // event.sender.send('open-button-clicked', data) // event not defined here
-//       mainWindow.webContents.send('open-file', data);
+function openFileClick(fileName) {
+  console.log('inside openFileClick');
+  console.log('openFileClick filename:', fileName);
+    // open file in text editor
+    fs.readFile(fileName, 'utf-8', (err, data) => {
+      console.log('data in openFileClick:', data);
+      if (err) {
+        console.log('main.js error found', err);
+        // alert("An error ocurred reading the file :" + err.message);
+        return;
+      }
+      console.log('About to invoke mainWindow.webContents.send()');
+      // event.sender.send('open-button-clicked', data) // event not defined here
+      mainWindow.webContents.send('open-file', data);
       
-//       // Change how to handle the file content
-//       console.log("The file content is : " + data);
-//       return data;
-//     });
-// };
+      // Change how to handle the file content
+      console.log("The file content is : " + data);
+      return data;
+    });
+};
 
 
 const saveAs = function(fileNames) {
