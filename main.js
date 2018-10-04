@@ -38,10 +38,12 @@ function createWindow() {
   Menu.setApplicationMenu(menu);
 }
 
+// inject text
+const injectText = function(text) {
+  mainWindow.webContents.send('inject-text', text);
+};
 
-
-//  FILE FUNCITONS -----------------------------
-
+//  FILE FUNCTIONS -----------------------------
 // create menu 
 const openFile = function(fileNames) {
   dialog.showOpenDialog(fileNames => {
@@ -140,6 +142,10 @@ const menuTemplate = [
         click: () => {
           saveFile();
         }
+      },
+      {
+        label: 'Inject!',
+        click: () => { injectText(); }
       }
     ]
   },
