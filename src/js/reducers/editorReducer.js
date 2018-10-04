@@ -1,17 +1,24 @@
 const initialState = {
-    editor: 'Unloaded editor',
-}
+  editor: "Unloaded editor",
+  filename: ""
+};
 
+const todos = (state = initialState, action) => {
+  switch (action.type) {
+    case "SET_EDITOR":
+      return {
+        ...state,
+        editor: action.payload
+      };
 
-  const todos = (state = initialState, action) => {
-    switch (action.type) {
-      case 'SET_EDITOR':
+    case "SAVE_TEXT":
+      return {
+        ...state,
+        filename: action.payload
+      };
+    default:
+      return state;
+  }
+};
 
-        return {
-          ...state,
-          editor: action.payload
-        }
-      default:
-        return state
-    }}
-  export default todos;
+export default todos;
