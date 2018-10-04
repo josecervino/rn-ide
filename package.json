@@ -34,15 +34,17 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
-    "monaco-editor": "^0.14.2",
-    "css-loader": "^1.0.0",
-    "style-loader": "^0.22.1",
-    "webpack": "^4.16.5",
-    "webpack-cli": "^3.1.0",
     "concurrently": "^4.0.1",
+    "css-loader": "^1.0.0",
+    "monaco-editor": "^0.14.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-redux": "^5.0.7",
     "react-treebeard": "^3.1.0",
-    "wait-on": "^3.0.1"
+    "redux": "^4.0.0",
+    "style-loader": "^0.22.1",
+    "wait-on": "^3.0.1",
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0"
   }
 }
