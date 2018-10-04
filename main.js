@@ -1,10 +1,10 @@
 // Modules to control application life and create native browser window
 const {
-  app, 
-  BrowserWindow, 
+  app,
+  BrowserWindow,
   Menu,
-  shell, 
-  dialog, 
+  shell,
+  dialog,
   ipcMain
 } = require('electron')
 const fs = require('fs')
@@ -35,7 +35,7 @@ function createWindow () {
   Menu.setApplicationMenu(menu);
 }
 
-// create menu 
+// create menu
 
 const openFile = function(fileNames) {
   dialog.showOpenDialog((fileNames) => {
@@ -50,48 +50,60 @@ const openFile = function(fileNames) {
         alert("An error ocurred reading the file :" + err.message);
         return;
       }
-      mainWindow.webContents.send('open-file', data);
-      
+      mainWindow.webContents.send('open-file', data, fileNames[0]);
+
       // Change how to handle the file content
       console.log("The file content is : " + data);
     });
   });
 };
 
-const saveFile = function(fileNames) {
+const saveAs = function(fileNames) {
   dialog.showSaveDialog((fileName) => {
     if (fileName === undefined){
       console.log("You didn't save the file");
       return;
     }
-    mainWindow.webContents.send('save-file');
-    
-    ipcMain.on('save-file', (event, arg) => {
-      // save data from text editor to file
-      fs.writeFile(fileName, arg, (err) => {
-        if(err){
-          console.log("An error occurred creating the file "+ err.message)
-        }
-        console.log("File successfully saved.");
-      });
-    }); 
+    saveFile(fileName)
   })
 };
+
+const saveFile = function(fileName){
+  mainWindow.webContents.send('save-file');
+
+  ipcMain.on('save-file', (event, arg, currentFileName) => {
+    // save data from text editor to file
+    fs.writeFile(fileName ? fileName : currentFileName, arg, (err) => {
+      console.log({fileName});
+      console.log({currentFileName});
+      if(err){
+        console.log("An error occurred creating the file "+ err.message)
+      }
+      console.log("File successfully saved.");
+    });
+  });
+}
 
 const menuTemplate = [
   {
     label: 'File',
-    submenu: [{
+    submenu: [
+    {
       label: 'Open!',
       click: () => { openFile(); }
     },
     {
-      label: 'Save!',
+      label: 'Save as...',
+      click: () => { saveAs(); }
+    },
+    {
+      label: 'Save',
       click: () => { saveFile(); }
-    }],
+    }
+  ],
   },
-  
-  
+
+
   {
     label: 'Edit',
     submenu: [
@@ -182,13 +194,13 @@ console.log('running main.js')
 
 // listener for save button
 ipcMain.on('save-button-clicked', (event, arg) => {
-  
+
   dialog.showSaveDialog((fileName) => {
     if (fileName === undefined){
       console.log("You didn't save the file");
       return;
     }
-    
+
     // save data from text editor to file
     fs.writeFile(fileName, arg, (err) => {
       if(err){
@@ -214,11 +226,11 @@ ipcMain.on('open-button-clicked', (event) => {
         return;
       }
       event.sender.send('open-button-clicked', data)
-      
+
       // Change how to handle the file content
       console.log("The file content is : " + data);
     });
-  }); 
+  });
 });
 
 // This method will be called when Electron has finished
