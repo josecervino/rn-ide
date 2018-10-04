@@ -1,7 +1,7 @@
 // import * as monaco from "monaco-editor";
 // const fs = window.require("fs"); 
 // const { ipcRenderer, dialog } = require("electron");
- 
+  
 
 // self.MonacoEnvironment = {
 
@@ -50,9 +50,9 @@
 // function openText() {
 //   ipcRenderer.send("open-button-clicked");
 // }
-// display the opened file in text editor
+//   //display the opened file in text editor
 // ipcRenderer.on('open-button-clicked', (event, arg) => {
-// 	editor.setValue(arg)
+//     editor.setValue(arg)
 // })
 
 // // display selected file from menu in text editor
@@ -77,7 +77,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+// import "./index.css";
 import App from "./App";
 
 ReactDOM.render(<App />, document.getElementById("root"));

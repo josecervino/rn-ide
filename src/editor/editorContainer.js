@@ -4,7 +4,7 @@ import Editor from './components/Editor';
 class EditorContainer extends React.Component {
   render() {
     return (
-      <React.Fragment>
+      <React.Fragment> 
         <Editor />
       </React.Fragment>
     )
