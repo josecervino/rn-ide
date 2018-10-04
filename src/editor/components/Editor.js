@@ -37,13 +37,21 @@ class Editor extends React.Component {
       value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join("\n"),
       language: "javascript"
     });
+
     this.props.setEditor(monacoEditor);
 
-    // // listen for main process prompt to save file
+    // // display selected file from menu in text editor
+    ipcRenderer.on('open-file', (event, arg) => {
+    	this.props.editor.setValue(arg)
+    	console.log(arg);
+    })
+
+    // listen for main process prompt to save file
     ipcRenderer.on('save-file', (event, arg) => {
     	ipcRenderer.send('save-file', this.props.editor.getValue())
     })
   }
+  
   render() {
     console.log('editor', this.props.editor);
     return (
