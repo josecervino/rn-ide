@@ -1,19 +1,13 @@
-import React from 'react';
+import React from "react";
 import * as monaco from "monaco-editor";
 const fs = window.require("fs");
 const { ipcRenderer, dialog } = require("electron");
 import { connect } from "react-redux";
-import {
-  addTodo,
-  // monaco,
-  setEditor
-} from "../../js/actions/action"
+import { getFileName, setEditor } from "../../js/actions/action";
 
 class Editor extends React.Component {
   componentDidMount() {
-
     self.MonacoEnvironment = {
-
       getWorkerUrl: function(moduleId, label) {
         if (label === "json") {
           return "../dist/json.worker.bundle.js";
@@ -31,48 +25,59 @@ class Editor extends React.Component {
       }
     };
 
-    const monacoEditor = monaco.editor.create(document.getElementById("editor-container"), {
-      value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join("\n"),
-      language: "javascript"
-    });
+    const monacoEditor = monaco.editor.create(
+      document.getElementById("editor-container"),
+      {
+        value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join(
+          "\n"
+        ),
+        language: "javascript"
+      }
+    );
 
     this.props.setEditor(monacoEditor);
 
     // // display selected file from menu in text editor
-    ipcRenderer.on('open-file', (event, arg) => {
-    	this.props.editor.setValue(arg)
-    	console.log(arg);
-    })
+    ipcRenderer.on("open-file", (event, arg, filename) => {
+      console.log("filename", filename);
+      this.props.getFileName(filename);
+
+      this.props.editor.setValue(arg);
+      console.log(arg);
+    });
 
     // listen for main process prompt to save file
-    ipcRenderer.on('save-file', (event, arg) => {
-    	ipcRenderer.send('save-file', this.props.editor.getValue())
-    })
+    ipcRenderer.on("save-file", (event, arg) => {
+      ipcRenderer.send(
+        "save-file",
+        this.props.editor.getValue(),
+        this.props.filename
+      );
+    });
   }
 
   render() {
     // console.log('editor', this.props.editor);
-    return (
-        <div id='editor-container'>
-        </div>
-    )
+    return <div id="editor-container" />;
   }
 }
 
-function mapStateToProps(state){
-
-    return {
-        editor: state.editorReducer.editor,
-    }
+function mapStateToProps(state) {
+  return {
+    editor: state.editorReducer.editor,
+    filename: state.editorReducer.filename
+  };
 }
-function mapDispatchToProps (dispatch) {
-
-return  {
-    setEditor: (editor) => dispatch(setEditor(editor)),
-  }
+function mapDispatchToProps(dispatch) {
+  return {
+    setEditor: editor => dispatch(setEditor(editor)),
+    getFileName: filename => dispatch(getFileName(filename))
+  };
 }
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Editor);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Editor);
 
 // export default Editor;
