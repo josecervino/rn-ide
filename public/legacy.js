@@ -1,8 +1,7 @@
-// SAVED FOR FILE TREE DEVELOPMENT
 // import * as monaco from "monaco-editor";
-// const fs = window.require("fs"); 
+// const fs = window.require("fs");
 // const { ipcRenderer, dialog } = require("electron");
-  
+
 
 // self.MonacoEnvironment = {
 
@@ -51,9 +50,9 @@
 // function openText() {
 //   ipcRenderer.send("open-button-clicked");
 // }
-//   //display the opened file in text editor
+// display the opened file in text editor
 // ipcRenderer.on('open-button-clicked', (event, arg) => {
-//     editor.setValue(arg)
+// 	editor.setValue(arg)
 // })
 
 // // display selected file from menu in text editor
@@ -75,20 +74,3 @@
 // });
 
 //----------------------------------------------------
-
-import React from "react";
-import ReactDOM from "react-dom";
-// import "./index.css";
-import App from "./App";
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import rootReducer from './js/reducers/rootReducer';
-
-const store = createStore(rootReducer)
-
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root")
-);
