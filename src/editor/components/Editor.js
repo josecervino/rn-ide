@@ -38,6 +38,11 @@ class Editor extends React.Component {
       language: "javascript"
     });
     this.props.setEditor(monacoEditor);
+
+    // // listen for main process prompt to save file
+    ipcRenderer.on('save-file', (event, arg) => {
+    	ipcRenderer.send('save-file', this.props.editor.getValue())
+    })
   }
   render() {
     console.log('editor', this.props.editor);
