@@ -2,6 +2,7 @@ import React from "react";
 import * as monaco from "monaco-editor";
 const fs = window.require("fs");
 const { ipcRenderer, dialog } = require("electron");
+
 import { connect } from "react-redux";
 import { getFileName, setEditor } from "../../js/actions/action";
 
@@ -69,6 +70,22 @@ class Editor extends React.Component {
       console.log(arg);
     });
 
+// FILE TREE EDITOR DEVELOPMENT
+//     function openText() {
+//       ipcRenderer.send("open-button-clicked");
+//     }
+//     //display the opened file in text editor
+//     ipcRenderer.on('open-button-clicked', (event, arg) => {
+//       monacoEditor.setValue(arg)
+//     })
+
+//   }
+
+//    render() {
+//     return (
+//       <div id='editor-container'></div>
+//     )
+    
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
       console.log("filename", this.props.filename);

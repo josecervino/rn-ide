@@ -7,7 +7,7 @@ class File extends React.Component {
         <p> This is the File folder. </p>
       </React.Fragment>
     );
-  }
+  } 
 }
 
 export default File;
