@@ -38,8 +38,12 @@ function createWindow () {
   Menu.setApplicationMenu(menu);
 }
 
-// create menu 
+// inject text
+const injectText = function(text) {
+  mainWindow.webContents.send('inject-text', text);
+};
 
+// create menu 
 const openFile = function(fileNames) {
   dialog.showOpenDialog((fileNames) => {
     if (fileNames === undefined) {
@@ -91,7 +95,11 @@ const menuTemplate = [
     {
       label: 'Save!',
       click: () => { saveFile(); }
-    }],
+    },
+    {
+      label: 'INJECT!',
+      click: () => { injectText(); }
+    }]
   },
   
   
@@ -136,7 +144,7 @@ const menuTemplate = [
       {
         label: 'Learn More',
         click () { shell.openExternal('https://electronjs.org') }
-      }
+        }
     ]
   }
 ]

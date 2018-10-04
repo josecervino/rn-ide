@@ -33,19 +33,46 @@ class Editor extends React.Component {
 
     const monacoEditor = monaco.editor.create(document.getElementById("editor-container"), {
       value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join("\n"),
-      language: "javascript"
+      language: "javascript",
+      theme: 'vs-dark',
+      dragAndDrop: true,
+      fontFamily: "monaco",
+      fontSize: 14
     });
 
     this.props.setEditor(monacoEditor);
 
+    // listen for main process msg to inject text
+    ipcRenderer.on('inject-text', (event, arg) => {
+      let selection = this.props.editor.getSelection();
+      let range = new monaco.Range(
+        selection.startLineNumber, 
+        selection.startColumn, 
+        selection.endLineNumber, 
+        selection.endColumn
+      );
+      let id = { major: 1, minor: 1 };             
+      let op = {
+        identifier: id, 
+        range: range, 
+        text: "<Icon \n\tname='rowing' />", 
+        forceMoveMarkers: true
+      };
+      monacoEditor.executeEdits("my-source", [op]);
+      ipcRenderer.send('save-file', this.props.editor.getValue())
+    })
+
     // // display selected file from menu in text editor
     ipcRenderer.on('open-file', (event, arg) => {
+      console.log('IPC RENDERER OPEN FILE, ', this.props.editor.getValue());
+      console.log('arg', arg);
     	this.props.editor.setValue(arg)
     	console.log(arg);
     })
 
     // listen for main process prompt to save file
     ipcRenderer.on('save-file', (event, arg) => {
+      console.log('in renderer save file', this.props.editor.getValue());
     	ipcRenderer.send('save-file', this.props.editor.getValue())
     })
   }
