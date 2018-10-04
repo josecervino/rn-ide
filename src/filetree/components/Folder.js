@@ -8,6 +8,6 @@ class Folder extends React.Component {
       </React.Fragment>
     );
   }
-}
+} 
 
 export default Folder;
