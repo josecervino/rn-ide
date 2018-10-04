@@ -9,11 +9,9 @@ import {
   setEditor
 } from "../../js/actions/action"
 
-
-
 class Editor extends React.Component {
   componentDidMount() {
-    // {this.props.runMonaco}
+
     self.MonacoEnvironment = {
 
       getWorkerUrl: function(moduleId, label) {
@@ -51,38 +49,27 @@ class Editor extends React.Component {
     	ipcRenderer.send('save-file', this.props.editor.getValue())
     })
   }
-  
+
   render() {
-    console.log('editor', this.props.editor);
+    // console.log('editor', this.props.editor);
     return (
         <div id='editor-container'>
-          <p>{this.props.getEditor}</p>
-          <p>{this.props.todo}</p>
-
-          <p>Test text</p>
-          <button onClick={this.props.toggleTodo}>Click Me</button>
         </div>
     )
   }
 }
 
 function mapStateToProps(state){
-  console.log('the state',state.editorReducer.newEditor);
+
     return {
-        getEditor: state.editorReducer.newEditor,
-        todo: state.editorReducer.nextTodoId,
         editor: state.editorReducer.editor,
     }
 }
 function mapDispatchToProps (dispatch) {
-  console.log('add todo in mapDispatchToProps', addTodo);
+
 return  {
-    toggleTodo: () => dispatch(addTodo()),
-    setEditor: (editor) => dispatch(setEditor(editor))
-    // runMonaco: () => dispatch(monaco())
-
+    setEditor: (editor) => dispatch(setEditor(editor)),
   }
-
 }
 
 
