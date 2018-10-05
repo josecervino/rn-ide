@@ -25,13 +25,18 @@ class Editor extends React.Component {
       }
     };
 
+    const starterText = [
+      "function x() {",
+      '\tconsole.log("Whatup world!");',
+      "}"
+    ].join("\n");
+
     const monacoEditor = monaco.editor.create(
       document.getElementById("editor-container"),
       {
-        value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join(
-          "\n"
-        ),
-        language: "javascript"
+        value: starterText,
+        language: "javascript",
+        automaticLayout: true
       }
     );
 

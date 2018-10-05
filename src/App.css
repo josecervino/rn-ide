@@ -1,23 +1,28 @@
 .App {
-  text-align: center;
   display: grid;
   width: 100%;
-  grid-template-areas:'tree editor editor editor editor'
-                      'tree editor editor editor editor'
-                      'tree editor editor editor editor'
-                      'footer footer footer footer footer';
+  grid-template-areas:
+    "tree  tab  tab  tab  tab"
+    "tree editor editor editor editor"
+    "tree editor editor editor editor"
+    "tree editor editor editor editor"
+    "footer footer footer footer footer";
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr) 25px;
+  grid-template-rows: repeat(5, 1fr) 20px;
 }
 
 .editor {
   grid-area: editor;
   height: 75vh;
-  border : 1px solid red;
+  border: 1px solid red;
+}
+.tab {
+  margin-bottom: 0;
 }
 #editor-container {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .tree {
