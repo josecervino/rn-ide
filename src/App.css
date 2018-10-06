@@ -8,7 +8,7 @@
     "tree editor editor editor editor"
     "footer footer footer footer footer";
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr) 20px;
+  grid-template-rows: repeat(5, 1fr) 25px;
 }
 
 .editor {
@@ -17,7 +17,7 @@
   border: 1px solid red;
 }
 .tab {
-  margin-bottom: 0;
+  grid-area: tab;
 }
 #editor-container {
   height: 100%;
