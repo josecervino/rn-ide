@@ -36,7 +36,8 @@ class Editor extends React.Component {
         theme: 'vs-dark',
         dragAndDrop: true,
         fontFamily: "monaco",
-        fontSize: 14
+        fontSize: 14,
+        automaticLayout: true
       }
     );
 
@@ -46,16 +47,16 @@ class Editor extends React.Component {
     ipcRenderer.on('inject-text', (event, arg) => {
       let selection = this.props.editor.getSelection();
       let range = new monaco.Range(
-        selection.startLineNumber, 
-        selection.startColumn, 
-        selection.endLineNumber, 
+        selection.startLineNumber,
+        selection.startColumn,
+        selection.endLineNumber,
         selection.endColumn
       );
-      let id = { major: 1, minor: 1 };             
+      let id = { major: 1, minor: 1 };
       let op = {
-        identifier: id, 
-        range: range, 
-        text: "<Icon \n\tname='JoelReduxMaster' />", 
+        identifier: id,
+        range: range,
+        text: "<Icon \n\tname='JoelReduxMaster' />",
         forceMoveMarkers: true
       };
       monacoEditor.executeEdits("my-source", [op]);
@@ -85,7 +86,7 @@ class Editor extends React.Component {
 //     return (
 //       <div id='editor-container'></div>
 //     )
-    
+
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
       console.log("filename", this.props.filename);

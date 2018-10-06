@@ -9,9 +9,9 @@ body {
   /* text-align: center; */
   display: grid;
   width: 100%;
-  grid-template-areas:'tree editor editor editor editor'
-                      'tree editor editor editor editor'
-                      'tree editor editor editor editor'
+  grid-template-areas:'tree editor editor editor gui'
+                      'tree editor editor editor gui'
+                      'tree editor editor editor gui'
                       'footer footer footer footer footer';
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(3, 1fr) 25px;
@@ -20,7 +20,7 @@ body {
 .editor {
   grid-area: editor;
   height: 75vh;
-  border : 1px solid red;
+  /* border : 1px solid red; */
 }
 #editor-container {
   height: 100%;
@@ -32,6 +32,16 @@ body {
   background: #61616157;
   overflow-y: scroll;
   max-height: 75vh;
+  /* border : 1px solid blue; */
+}
+
+.gui {
+  grid-area: gui;
+  background: #F5F5F5;
+  overflow-y: scroll;
+  max-height: 75vh;
+  /* border : 2px solid red; */
+
 }
 
 .footer {
