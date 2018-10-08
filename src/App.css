@@ -1,3 +1,10 @@
+body {
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .App {
   display: grid;
   width: 100%;
@@ -8,17 +15,65 @@
     "tree editor editor editor editor"
     "footer footer footer footer footer";
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr) 25px;
+  grid-template-rows: 2em repeat(3, 1fr) 25px;
 }
 
 .editor {
   grid-area: editor;
   height: 75vh;
-  border: 1px solid red;
+}
+
+/* Tab styles */
+.tabContainer {
+  display: -webkit-inline-box;
 }
 .tab {
   grid-area: tab;
+  background: #3f4448;
 }
+
+ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+.tabi {
+  border-right: 1px solid #3f4448;
+}
+.tabi > ul > li {
+  list-style: none;
+  padding: 0;
+}
+.tabi > ul > li > a {
+  cursor: pointer;
+  background: #041421;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+}
+/* .nav > li {
+  bottom: 0.7em;
+}
+.navbar-nav {
+  margin: 0;
+  margin-left: 0;
+}
+.navbar-nav > li > a {
+  padding-bottom: 3px;
+  margin-right: 1px;
+  background: red;
+  border-radius: 1px;
+}
+.navbar {
+  height: 0;
+  min-height: 30px;
+  margin-bottom: 0;
+}
+.container {
+  height: 0;
+}
+li {
+  padding: 0;
+} */
 #editor-container {
   height: 100%;
   width: 100%;

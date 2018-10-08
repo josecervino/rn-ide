@@ -1,6 +1,6 @@
 const initialState = {
   editor: "Unloaded editor",
-  filename: ""
+  filename: []
 };
 
 const todos = (state = initialState, action) => {

@@ -15,12 +15,16 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.1.0",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.2",
-    "electron": "^3.0.0",
+    "electron": "^3.0.2",
     "electron-builder": "^20.28.4",
     "electron-is-dev": "^1.0.1",
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "file-loader": "^2.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
@@ -34,6 +38,7 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
+    "@material-ui/core": "^3.2.0",
     "concurrently": "^4.0.1",
     "css-loader": "^1.0.0",
     "monaco-editor": "^0.14.2",

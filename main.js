@@ -1,4 +1,3 @@
-// Modules to control application life and create native browser window
 const {
   app,
   BrowserWindow,
@@ -8,6 +7,8 @@ const {
   ipcMain
 } = require("electron");
 const fs = require("fs");
+
+//  CREATING THE WINDOW -----------------------------
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -35,8 +36,13 @@ function createWindow() {
   Menu.setApplicationMenu(menu);
 }
 
-// create menu
+// inject text
+const injectText = function(text) {
+  mainWindow.webContents.send("inject-text", text);
+};
 
+//  FILE FUNCTIONS -----------------------------
+// create menu
 const openFile = function(fileNames) {
   dialog.showOpenDialog(fileNames => {
     if (fileNames === undefined) {
@@ -45,6 +51,7 @@ const openFile = function(fileNames) {
     }
 
     // open file in text editor
+
     fs.readFile(fileNames[0], "utf-8", (err, data) => {
       if (err) {
         alert("An error ocurred reading the file :" + err.message);
@@ -57,6 +64,28 @@ const openFile = function(fileNames) {
     });
   });
 };
+
+// IN THE PROCESS OF SETTING UP LISTENER FOR OPENING FILE IN EDITOR
+function openFileClick(fileName) {
+  console.log("inside openFileClick");
+  console.log("openFileClick filename:", fileName);
+  // open file in text editor
+  fs.readFile(fileName, "utf-8", (err, data) => {
+    console.log("data in openFileClick:", data);
+    if (err) {
+      console.log("main.js error found", err);
+      // alert("An error ocurred reading the file :" + err.message);
+      return;
+    }
+    console.log("About to invoke mainWindow.webContents.send()");
+    // event.sender.send('open-button-clicked', data) // event not defined here
+    mainWindow.webContents.send("open-file", data);
+
+    // Change how to handle the file content
+    console.log("The file content is : " + data);
+    return data;
+  });
+}
 
 const saveAs = function(fileNames) {
   dialog.showSaveDialog(fileName => {
@@ -84,6 +113,8 @@ const saveFile = function(fileName) {
   });
 };
 
+//  MENU TEMPLATE FUNCITONS -----------------------------
+
 const menuTemplate = [
   {
     label: "File",
@@ -104,6 +135,12 @@ const menuTemplate = [
         label: "Save",
         click: () => {
           saveFile();
+        }
+      },
+      {
+        label: "Inject!",
+        click: () => {
+          injectText();
         }
       }
     ]
@@ -180,7 +217,7 @@ const menuTemplate = [
 
 if (process.platform === "darwin") {
   menuTemplate.unshift({
-    label: app.getName(),
+    label: app.getName(""),
     submenu: [
       { role: "about" },
       { type: "separator" },
@@ -213,11 +250,11 @@ if (process.platform === "darwin") {
   ];
 }
 
-console.log("running main.js");
+//  EVENT LISTENERS -----------------------------
 
 // In main process.
-
 // listener for save button
+
 ipcMain.on("save-button-clicked", (event, arg) => {
   dialog.showSaveDialog(fileName => {
     if (fileName === undefined) {
@@ -256,6 +293,38 @@ ipcMain.on("open-button-clicked", event => {
     });
   });
 });
+
+ipcMain.on("open-file-in-editor", (event, path) => {
+  console.log("ipcMain path:", path);
+  openFileClick(path);
+
+  console.log("after assigning file data to data variable");
+  // event.sender.send('open-button-clicked', data);
+
+  // open file in text editor
+  // fs.stat(path, (err, data) => {
+  //   console.log('fs.stat error:', err);
+  //   console.log('fs.stat data:', data);
+  //   return;
+  // })
+
+  // fs.readFile(path, 'utf-8', (err, data) => {
+  //   console.log('data in readFile of ipcMain:', data);
+
+  //   if (err) {
+  //     console.log('main.js error found', err);
+  //     // alert("An error ocurred reading the file :" + err.message);
+  //     return;
+  //   }
+
+  //   mainWindow.webContents.send('open-file', data);
+
+  //   // Change how to handle the file content
+  //   console.log("The file content is : " + data);
+  // });
+});
+
+//  APP FUNCITONS -----------------------------
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
