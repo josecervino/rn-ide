@@ -20,6 +20,7 @@
     "babel-loader": "^8.0.2",
     "electron": "^3.0.2",
     "electron-builder": "^20.28.4",
+    "electron-devtools-installer": "^2.2.4",
     "electron-is-dev": "^1.0.1",
     "file-loader": "^2.0.0",
     "html-loader": "^0.5.5",

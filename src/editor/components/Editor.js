@@ -36,7 +36,8 @@ class Editor extends React.Component {
         theme: 'vs-dark',
         dragAndDrop: true,
         fontFamily: "monaco",
-        fontSize: 14
+        fontSize: 14,
+        automaticLayout: true
       }
     );
 
