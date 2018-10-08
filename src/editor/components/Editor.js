@@ -4,7 +4,11 @@ const fs = window.require("fs");
 const { ipcRenderer, dialog } = require("electron");
 
 import { connect } from "react-redux";
-import { getFileName, setEditor } from "../../js/actions/action";
+import {
+  getFileName,
+  setEditor,
+  setRange,
+} from "../../js/actions/action";
 
 class Editor extends React.Component {
   componentDidMount() {
@@ -52,6 +56,7 @@ class Editor extends React.Component {
         selection.endLineNumber,
         selection.endColumn
       );
+      console.log({range});
       let id = { major: 1, minor: 1 };
       let op = {
         identifier: id,
@@ -59,6 +64,13 @@ class Editor extends React.Component {
         text: "<Icon \n\tname='JoelReduxMaster' />",
         forceMoveMarkers: true
       };
+      const newRange =  new monaco.Range(
+        range.startLineNumber + 1,
+        8,
+        range.endLineNumber + 1,
+        23,
+      )
+      this.props.setRange(newRange)
       monacoEditor.executeEdits("my-source", [op]);
       ipcRenderer.send('save-file', this.props.editor.getValue())
     })
@@ -108,13 +120,15 @@ class Editor extends React.Component {
 function mapStateToProps(state) {
   return {
     editor: state.editorReducer.editor,
-    filename: state.editorReducer.filename
+    filename: state.editorReducer.filename,
+    range: state.editorReducer.currentRange,
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
     setEditor: editor => dispatch(setEditor(editor)),
-    getFileName: filename => dispatch(getFileName(filename))
+    getFileName: filename => dispatch(getFileName(filename)),
+    setRange: range => dispatch(setRange(range))
   };
 }
 

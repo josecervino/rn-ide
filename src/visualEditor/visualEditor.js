@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import * as monaco from "monaco-editor";
 
 import { setInputValue } from '../js/actions/vizEditorActions';
+import { setRange } from '../js/actions/action';
 
 
 class VisualEditor extends Component {
@@ -19,10 +20,11 @@ class VisualEditor extends Component {
   }
 
   onChangeText (event) {
-    let selection =  new monaco.Selection(1,1,1,this.props.range)
-    console.log({selection});
-    this.props.editor.setSelection(selection)
-    console.log({event});
+    console.log(this.props.range);
+    // let selection =  new monaco.Selection(this.props.range)
+    // console.log({selection});
+    // this.props.editor.setSelection(selection)
+    // console.log({event});
     this.props.setInputValue(event.target.value);
     // const range = {
     //   startLineNumber: 1,
@@ -31,10 +33,11 @@ class VisualEditor extends Component {
     //   endColumn: 5,
     // }
     this.props.editor.executeEdits('input', [
-     { range: new monaco.Range(1,1,1,(this.props.range + 1)), text: event.target.value }
+     { range: this.props.range, text: event.target.value }
    ]);
-
-
+   const newRange = { ...this.props.range };
+   newRange.endColumn = (newRange.startColumn + event.target.value.length);
+    this.props.setRange(newRange);
   }
 
   render() {
@@ -56,12 +59,13 @@ class VisualEditor extends Component {
     return {
       inputVal: state.vizEditorReducer.input,
       editor: state.editorReducer.editor,
-      range: state.vizEditorReducer.range,
+      range: state.editorReducer.currentRange,
     };
   }
   function mapDispatchToProps(dispatch) {
     return {
       setInputValue: input => dispatch(setInputValue(input)),
+      setRange: range => dispatch(setRange(range))
     };
   }
 

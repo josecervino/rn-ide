@@ -1,6 +1,9 @@
+import { SET_RANGE } from '../actions/constants';
+
 const initialState = {
   editor: "Unloaded editor",
-  filename: ""
+  filename: "",
+  currentRange: 0,
 };
 
 const todos = (state = initialState, action) => {
@@ -15,6 +18,11 @@ const todos = (state = initialState, action) => {
       return {
         ...state,
         filename: action.payload
+      };
+    case SET_RANGE:
+      return {
+        ...state,
+        currentRange: action.payload,
       };
     default:
       return state;
