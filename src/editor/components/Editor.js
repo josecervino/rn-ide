@@ -10,6 +10,18 @@ import {
   setRange,
 } from "../../js/actions/action";
 
+// const line1 = '<ActivityIndicatorIOS '
+// const line2 = 'style={{ '
+// const line3 = `alignItems: 'center', `
+// const line4 = `justifyContent: 'center', `
+// const line5 = '}} '
+// const line6 = 'animating={true} '
+// const line7 = `size={'small'}`
+// const line8 = `color={'black'}`
+// const line9 = '/>'
+//
+// const text = [line1, line2, line3, line4,line5, line6, line7, line8, line9];
+
 class Editor extends React.Component {
   componentDidMount() {
     self.MonacoEnvironment = {
@@ -50,28 +62,36 @@ class Editor extends React.Component {
     // listen for main process msg to inject text
     ipcRenderer.on('inject-text', (event, arg) => {
       let selection = this.props.editor.getSelection();
-      let range = new monaco.Range(
-        selection.startLineNumber,
-        selection.startColumn,
-        selection.endLineNumber,
-        selection.endColumn
-      );
-      console.log({range});
+    let range = new monaco.Range(
+      selection.startLineNumber,
+      selection.startColumn,
+      selection.endLineNumber,
+      selection.endColumn
+    );
+      // for (let i = 0; i < text.length; i++){
+      const space = '\t'
+      const offset = space.repeat(range.startColumn);
+      const endOffSet = space.repeat(range.startColumn - 1);
+        const text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`
+      // console.log({range});
       let id = { major: 1, minor: 1 };
+      // const newRange =  new monaco.Range(
+      //   range.startLineNumber + i,
+      //   (range.startColumn),
+      //   range.endLineNumber + i,
+      //   (range.endColumn),
+      // )
       let op = {
         identifier: id,
-        range: range,
-        text: "<Icon \n\tname='JoelReduxMaster' />",
+        range,
+        text: text,
         forceMoveMarkers: true
       };
-      const newRange =  new monaco.Range(
-        range.startLineNumber + 1,
-        8,
-        range.endLineNumber + 1,
-        23,
-      )
-      this.props.setRange(newRange)
+      // console.log({newRange});
+      console.log({op});
+      this.props.setRange(range)
       monacoEditor.executeEdits("my-source", [op]);
+    // }
       ipcRenderer.send('save-file', this.props.editor.getValue())
     })
 
