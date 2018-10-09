@@ -8,6 +8,7 @@ import {
   getFileName,
   setEditor,
   setRange,
+  setCoords
 } from "../../js/actions/action";
 
 // const line1 = '<ActivityIndicatorIOS '
@@ -72,7 +73,9 @@ class Editor extends React.Component {
       const space = '\t'
       const offset = space.repeat(range.startColumn);
       const endOffSet = space.repeat(range.startColumn - 1);
-        const text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`
+      const text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`
+      const coord = { alignItems: { lineStart: 2, lineEnd: 2, colStart: 14, colEnd: 20 }};
+      this.props.setCoords(coord);
       // console.log({range});
       let id = { major: 1, minor: 1 };
       // const newRange =  new monaco.Range(
@@ -89,8 +92,15 @@ class Editor extends React.Component {
       };
       // console.log({newRange});
       console.log({op});
-      this.props.setRange(range)
+
+      // this.props.setCoords(coord);
       monacoEditor.executeEdits("my-source", [op]);
+
+      range.startLineNumber = (range.startLineNumber + this.props.coords.alignItems.lineStart)
+      range.endLineNumber = (range.endLineNumber + this.props.coords.alignItems.lineEnd);
+      range.startColumn = (range.startColumn + this.props.coords.alignItems.colStart);
+      range.endColumn = (range.endColumn + this.props.coords.alignItems.colEnd);
+      this.props.setRange(range);
     // }
       ipcRenderer.send('save-file', this.props.editor.getValue())
     })
@@ -142,13 +152,15 @@ function mapStateToProps(state) {
     editor: state.editorReducer.editor,
     filename: state.editorReducer.filename,
     range: state.editorReducer.currentRange,
+    coords: state.editorReducer.coords,
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
     setEditor: editor => dispatch(setEditor(editor)),
     getFileName: filename => dispatch(getFileName(filename)),
-    setRange: range => dispatch(setRange(range))
+    setRange: range => dispatch(setRange(range)),
+    setCoords: coords => dispatch(setCoords(coords))
   };
 }
 

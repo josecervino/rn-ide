@@ -21,7 +21,8 @@ class VisualEditor extends Component {
   }
 
   onChangeText (event) {
-    console.log(this.props.range);
+    // console.log(this.props.range);
+    const range = { ...this.props.range };
     // let selection =  new monaco.Selection(this.props.range)
     // console.log({selection});
     // this.props.editor.setSelection(selection)
@@ -33,11 +34,19 @@ class VisualEditor extends Component {
     //   endLineNumber: 1,
     //   endColumn: 5,
     // }
+    // range.startLineNumber = (event.target.value.length > 1 ? range.startLineNumber : (range.startLineNumber + this.props.coords.alignItems.lineStart))
+    // range.endLineNumber = (event.target.value.length > 1 ? range.endLineNumber : (range.endLineNumber + this.props.coords.alignItems.lineEnd));
+    // range.startColumn = (event.target.value.length > 1 ? range.startColumn : (range.startColumn + this.props.coords.alignItems.colStart));
+    // range.endColumn = (event.target.value.length > 1 ? range.endColumn : (range.endColumn + this.props.coords.alignItems.colEnd));
+
+
     this.props.editor.executeEdits('input', [
-      { range: this.props.range, text: event.target.value }
+      { range: range, text: event.target.value }
     ]);
-    const newRange = { ...this.props.range };
+    console.log({range});
+    const newRange = { ...range };
     newRange.endColumn = (newRange.startColumn + event.target.value.length);
+    console.log({newRange});
     this.props.setRange(newRange);
   }
 
@@ -70,6 +79,7 @@ function mapStateToProps(state) {
     editor: state.editorReducer.editor,
     range: state.editorReducer.currentRange,
     selection: state.vizEditorReducer.selection,
+    coords: state.editorReducer.coords,
   };
 }
 function mapDispatchToProps(dispatch) {

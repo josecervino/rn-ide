@@ -1,4 +1,7 @@
-import { SET_RANGE } from './constants'
+import {
+  SET_RANGE,
+  SET_COORDS,
+} from './constants';
 
 export const setEditor = editor => ({
   type: 'SET_EDITOR',
@@ -13,4 +16,9 @@ export const getFileName = filename => ({
 export const setRange = range => ({
   type: SET_RANGE,
   payload: range,
+});
+
+export const setCoords = coords => ({
+  type: SET_COORDS,
+  payload: coords,
 });
