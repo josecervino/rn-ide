@@ -9,7 +9,7 @@ function TabContainer(props) {
       <ul>
         <li>
           <a>
-            <span> place Holder</span>
+            <span> {props.name}</span>
           </a>
         </li>
       </ul>
@@ -17,21 +17,36 @@ function TabContainer(props) {
   );
 }
 class Tab extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    console.log("click me");
+  }
   render() {
-    return (
-      <div className="tabContainer">
-        <TabContainer />
-        <TabContainer />
-        <TabContainer />
-      </div>
-    );
+    let filename = this.props.filename;
+    if (!filename || filename.length === 0) {
+      return <TabContainer name="filename" onclick={this.handleClick()} />;
+    } else {
+      return (
+        <div className="tabContainer">
+          {filename.map((ele, index) => (
+            <TabContainer
+              key={index}
+              name={ele.replace(/^.*[\\\/]/, "")}
+              onclick={this.handleClick()}
+            />
+          ))}
+        </div>
+      );
+    }
   }
 }
 function mapStateToProps(state) {
-  console.log("state", state);
-
-  console.log("filename", state.editorReducer.filename);
   return {
+    // reduxState: state,
     editor: state.editorReducer.editor,
     filename: state.editorReducer.filename
   };
