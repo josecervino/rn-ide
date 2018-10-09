@@ -4,10 +4,11 @@ import {
   SET_SELECTION,
 } from './constants';
 
-export const setInputValue = (input) => {
+export const setInputValue = (item, input) => {
   console.log({ input });
   return {
     type: SET_INPUT,
+    item,
     payload: input,
   };
 };

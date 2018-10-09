@@ -24,6 +24,10 @@ import {
 // const text = [line1, line2, line3, line4,line5, line6, line7, line8, line9];
 
 class Editor extends React.Component {
+  constructor (props){
+    super(props)
+    this.getRange = this.getRange.bind(this);
+  }
   componentDidMount() {
     self.MonacoEnvironment = {
       getWorkerUrl: function(moduleId, label) {
@@ -74,7 +78,13 @@ class Editor extends React.Component {
       const offset = space.repeat(range.startColumn);
       const endOffSet = space.repeat(range.startColumn - 1);
       const text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`
-      const coord = { alignItems: { lineStart: 2, lineEnd: 2, colStart: 14, colEnd: 20 }};
+      const coord = {
+        alignItems: { lineStart: 2, lineEnd: 2, colStart: 14, colEnd: 20 },
+        justifyContent: { lineStart: 3, lineEnd: 3, colStart: 18, colEnd: 24 },
+        animating: { lineStart: 5, lineEnd: 5, colStart: 12, colEnd: 16 },
+        size: { lineStart: 6, lineEnd: 6, colStart: 8, colEnd: 13 },
+        color: { lineStart: 7, lineEnd: 7, colStart: 9, colEnd: 14 },
+      };
       this.props.setCoords(coord);
       // console.log({range});
       let id = { major: 1, minor: 1 };
@@ -96,11 +106,12 @@ class Editor extends React.Component {
       // this.props.setCoords(coord);
       monacoEditor.executeEdits("my-source", [op]);
 
-      range.startLineNumber = (range.startLineNumber + this.props.coords.alignItems.lineStart)
-      range.endLineNumber = (range.endLineNumber + this.props.coords.alignItems.lineEnd);
-      range.startColumn = (range.startColumn + this.props.coords.alignItems.colStart);
-      range.endColumn = (range.endColumn + this.props.coords.alignItems.colEnd);
-      this.props.setRange(range);
+      // range.startLineNumber = (range.startLineNumber + this.props.coords.alignItems.lineStart)
+      // range.endLineNumber = (range.endLineNumber + this.props.coords.alignItems.lineEnd);
+      // range.startColumn = (range.startColumn + this.props.coords.alignItems.colStart);
+      // range.endColumn = (range.endColumn + this.props.coords.alignItems.colEnd);
+      const updatedRange = this.getRange(range, coord)
+      this.props.setRange(updatedRange);
     // }
       ipcRenderer.send('save-file', this.props.editor.getValue())
     })
@@ -139,6 +150,19 @@ class Editor extends React.Component {
         this.props.filename
       );
     });
+  }
+
+  getRange (inputRange, coordinates) {
+    const newRange = {}
+    for (let item in coordinates){
+      const range = { ...inputRange };
+      range.startLineNumber = (range.startLineNumber + coordinates[item].lineStart)
+      range.endLineNumber = (range.endLineNumber + coordinates[item].lineEnd);
+      range.startColumn = (range.startColumn + coordinates[item].colStart);
+      range.endColumn = (range.endColumn + coordinates[item].colEnd);
+      newRange[item] = range;
+    }
+    return newRange;
   }
 
   render() {

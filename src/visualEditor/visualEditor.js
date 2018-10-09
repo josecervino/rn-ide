@@ -10,8 +10,13 @@ class VisualEditor extends Component {
 
   constructor(props){
     super(props)
-    this.onChangeText = this.onChangeText.bind(this);
+    this.onChangeAlignItems = this.onChangeAlignItems.bind(this);
+    this.onChangeJustifyContent = this.onChangeJustifyContent.bind(this);
+    this.onChangeAnimating = this.onChangeAnimating.bind(this);
+    this.onChangeSize = this.onChangeSize.bind(this);
+    this.onChangeColor = this.onChangeColor.bind(this);
     this.onChangeSelection = this.onChangeSelection.bind(this);
+    this.changeText = this.changeText.bind(this);
   }
 
   componentDidMount(){
@@ -20,14 +25,61 @@ class VisualEditor extends Component {
 
   }
 
-  onChangeText (event) {
+  onChangeAlignItems (event) {
+    this.changeText(event, 'alignItems')
     // console.log(this.props.range);
-    const range = { ...this.props.range };
+    // const range = { ...this.props.range.alignItems };
+    // // let selection =  new monaco.Selection(this.props.range)
+    // // console.log({selection});
+    // // this.props.editor.setSelection(selection)
+    // // console.log({event});
+    // this.props.setInputValue(event.target.value);
+    // // const range = {
+    // //   startLineNumber: 1,
+    // //   startColumn: 1,
+    // //   endLineNumber: 1,
+    // //   endColumn: 5,
+    // // }
+    // // range.startLineNumber = (event.target.value.length > 1 ? range.startLineNumber : (range.startLineNumber + this.props.coords.alignItems.lineStart))
+    // // range.endLineNumber = (event.target.value.length > 1 ? range.endLineNumber : (range.endLineNumber + this.props.coords.alignItems.lineEnd));
+    // // range.startColumn = (event.target.value.length > 1 ? range.startColumn : (range.startColumn + this.props.coords.alignItems.colStart));
+    // // range.endColumn = (event.target.value.length > 1 ? range.endColumn : (range.endColumn + this.props.coords.alignItems.colEnd));
+    //
+    //
+    // this.props.editor.executeEdits('input', [
+    //   { range: range, text: event.target.value }
+    // ]);
+    // console.log({range});
+    // const newRange = { ...range };
+    // newRange.endColumn = (newRange.startColumn + event.target.value.length);
+    // console.log({newRange});
+    // const updatedRange = { ...this.props.range };
+    // updatedRange.alignItems = newRange
+    // this.props.setRange(updatedRange);
+  }
+
+  onChangeJustifyContent(event){
+    this.changeText(event, 'justifyContent');
+  }
+
+  onChangeAnimating(event) {
+    this.changeText(event, 'animating')
+  }
+  onChangeSize(event) {
+    this.changeText(event, 'size')
+  }
+
+  onChangeColor(event) {
+    this.changeText(event, 'color')
+  }
+
+  changeText (event, item){
+    const range = { ...this.props.range[item] };
     // let selection =  new monaco.Selection(this.props.range)
     // console.log({selection});
     // this.props.editor.setSelection(selection)
     // console.log({event});
-    this.props.setInputValue(event.target.value);
+    this.props.setInputValue(item, event.target.value);
     // const range = {
     //   startLineNumber: 1,
     //   startColumn: 1,
@@ -47,7 +99,9 @@ class VisualEditor extends Component {
     const newRange = { ...range };
     newRange.endColumn = (newRange.startColumn + event.target.value.length);
     console.log({newRange});
-    this.props.setRange(newRange);
+    const updatedRange = { ...this.props.range };
+    updatedRange[item] = newRange
+    this.props.setRange(updatedRange);
   }
 
   onChangeSelection (event) {
@@ -60,8 +114,28 @@ class VisualEditor extends Component {
       <div style={{ marginTop: 10 }}>
         <input
           type="text"
-          onChange={this.onChangeText}
-          value={this.props.inputVal}
+          onChange={this.onChangeAlignItems}
+          value={this.props.alignVal}
+        />
+        <input
+          type="text"
+          onChange={this.onChangeJustifyContent}
+          value={this.props.justifyContent}
+        />
+        <input
+          type="text"
+          onChange={this.onChangeAnimating}
+          value={this.props.animating}
+        />
+        <input
+          type="text"
+          onChange={this.onChangeSize}
+          value={this.props.size}
+        />
+        <input
+          type="text"
+          onChange={this.onChangeColor}
+          value={this.props.color}
         />
         <select value={this.props.selection} onChange={this.onChangeSelection}>
           <option value="center">Center</option>
@@ -75,7 +149,11 @@ class VisualEditor extends Component {
 
 function mapStateToProps(state) {
   return {
-    inputVal: state.vizEditorReducer.input,
+    alignVal: state.vizEditorReducer.input.alignItems,
+    justifyContent: state.vizEditorReducer.input.justifyContent,
+    animating: state.vizEditorReducer.input.animating,
+    size: state.vizEditorReducer.input.size,
+    color: state.vizEditorReducer.input.color,
     editor: state.editorReducer.editor,
     range: state.editorReducer.currentRange,
     selection: state.vizEditorReducer.selection,
