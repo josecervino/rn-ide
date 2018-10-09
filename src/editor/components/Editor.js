@@ -26,16 +26,29 @@ class Editor extends React.Component {
       }
     };
 
+    const starterText = [
+      "function x() {",
+      '\tconsole.log("Whatup world!");',
+      "}"
+    ].join("\n");
+
     const monacoEditor = monaco.editor.create(
       document.getElementById("editor-container"),
       {
         value: ['function x() {\n\tconsole.log("Whatup world!"); \n}'].join(
           '\n'
         ),
+<<<<<<< HEAD
         language: 'javascript',
         theme: 'vs-dark',
         dragAndDrop: true,
         fontFamily: 'monaco',
+=======
+        language: "javascript",
+        theme: "vs-dark",
+        dragAndDrop: true,
+        fontFamily: "monaco",
+>>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
         fontSize: 14,
         automaticLayout: true
       }
@@ -43,23 +56,28 @@ class Editor extends React.Component {
 
     this.props.setEditor(monacoEditor);
     // listen for main process msg to inject text
-    ipcRenderer.on('inject-text', (event, arg) => {
+    ipcRenderer.on("inject-text", (event, arg) => {
       let selection = this.props.editor.getSelection();
       let range = new monaco.Range(
-        selection.startLineNumber, 
-        selection.startColumn, 
-        selection.endLineNumber, 
+        selection.startLineNumber,
+        selection.startColumn,
+        selection.endLineNumber,
         selection.endColumn
       );
-      let id = { major: 1, minor: 1 };             
+      let id = { major: 1, minor: 1 };
       let op = {
-        identifier: id, 
-        range: range, 
-        text: "<Icon \n\tname='JoelReduxMaster' />", 
+        identifier: id,
+        range: range,
+        text: "<Icon \n\tname='JoelReduxMaster' />",
         forceMoveMarkers: true
       };
+<<<<<<< HEAD
       monacoEditor.executeEdits('my-source', [op]);
       ipcRenderer.send('save-file', this.props.editor.getValue())
+=======
+      monacoEditor.executeEdits("my-source", [op]);
+      ipcRenderer.send("save-file", this.props.editor.getValue());
+>>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
     });
 
     // // display selected file from menu in text editor
@@ -73,11 +91,16 @@ class Editor extends React.Component {
         ))
       });
 
+<<<<<<< HEAD
       this.props.editor.setModel(allModels[0])
       this.props.getFileName(allModels[1]);
+=======
+      this.props.editor.setValue(arg);
+>>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
     });
   
 
+<<<<<<< HEAD
 // FILE TREE EDITOR DEVELOPMENT
 //     function openText() {
 //       ipcRenderer.send("open-button-clicked");
@@ -98,6 +121,10 @@ class Editor extends React.Component {
       console.log('in save file, arg', arg);
       console.log('filename', this.props.filename);
 
+=======
+    // listen for main process prompt to save file
+    ipcRenderer.on("save-file", (event, arg) => {
+>>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
       ipcRenderer.send(
         'save-file',
         this.props.editor.getValue(),
@@ -109,8 +136,12 @@ class Editor extends React.Component {
 
 
   render() {
+<<<<<<< HEAD
     // console.log('editor', this.props.editor);
     return <div id='editor-container' />;
+=======
+    return <div id="editor-container" />;
+>>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
   }
 }
 
