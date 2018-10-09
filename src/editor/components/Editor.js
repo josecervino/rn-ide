@@ -75,12 +75,16 @@ class Editor extends React.Component {
       allFileNamesAndData.forEach(fileNameAndData => {
         allModels.push(monaco.editor.createModel(
           fileNameAndData[1],
-          'javascript'
+          'javascript',
+          monaco.Uri.from({ path: fileNameAndData[0] })
         ))
       });
 
       this.props.editor.setModel(allModels[0])
-      this.props.getFileName(allModels[1]);
+      debugger;
+      this.props.getFileName([allModels[0].uri.path, allModels[1].uri.path]);
+      
+      console.log(this.props.getFileName(allModels[0].uri.path, allModels[1].uri.path));
     });
   
 
