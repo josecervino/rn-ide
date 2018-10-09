@@ -112,36 +112,51 @@ class VisualEditor extends Component {
   render() {
     return (
       <div style={{ marginTop: 10 }}>
+        <p>
+          Align:
+        </p>
         <input
           type="text"
           onChange={this.onChangeAlignItems}
           value={this.props.alignVal}
         />
+        <p>
+          Justify:
+        </p>
         <input
           type="text"
           onChange={this.onChangeJustifyContent}
           value={this.props.justifyContent}
         />
+        <p>
+          Animate:
+        </p>
         <input
           type="text"
           onChange={this.onChangeAnimating}
           value={this.props.animating}
         />
+        <p>
+          Size:
+        </p>
         <input
           type="text"
           onChange={this.onChangeSize}
           value={this.props.size}
         />
+        <p>
+          Color:
+        </p>
         <input
           type="text"
           onChange={this.onChangeColor}
           value={this.props.color}
         />
-        <select value={this.props.selection} onChange={this.onChangeSelection}>
+        {/* <select value={this.props.selection} onChange={this.onChangeSelection}>
           <option value="center">Center</option>
           <option value="left">Left</option>
           <option value="right">Right</option>
-        </select>
+        </select> */}
       </div>
     )
   }
