@@ -46,10 +46,9 @@ Editor Styling
 ul {
   margin-left: 0;
   padding-left: 0;
+  margin-bottom: 0;
 }
-.tabi {
-  border-right: 1px solid #3f4448;
-}
+
 .tabi > ul > li {
   list-style: none;
   padding: 0;
@@ -58,33 +57,14 @@ ul {
   cursor: pointer;
   background: #041421;
   color: white;
+  border-right: 1px solid #61dafb;
   text-decoration: none;
-  padding: 10px;
+  padding: 1.05em 1em;
 }
-/* .nav > li {
-  bottom: 0.7em;
+.tabi > ul > li > a span {
+  position: relative;
+  top: 5px;
 }
-.navbar-nav {
-  margin: 0;
-  margin-left: 0;
-}
-.navbar-nav > li > a {
-  padding-bottom: 3px;
-  margin-right: 1px;
-  background: red;
-  border-radius: 1px;
-}
-.navbar {
-  height: 0;
-  min-height: 30px;
-  margin-bottom: 0;
-}
-.container {
-  height: 0;
-}
-li {
-  padding: 0;
-} */
 #editor-container {
   height: 100%;
   width: 100%;
@@ -96,7 +76,7 @@ Footer Styling
 */
 .footer {
   grid-area: footer;
-  background: #747474;
+  background: #61dafb;
 }
 
 /*
