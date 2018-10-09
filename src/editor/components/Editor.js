@@ -1,47 +1,47 @@
-import React from "react";
-import * as monaco from "monaco-editor";
-const fs = window.require("fs");
-const { ipcRenderer, dialog } = require("electron");
+import React from 'react';
+import * as monaco from 'monaco-editor';
+import { connect } from 'react-redux';
+import { getFileName, setEditor } from '../../js/actions/action';
 
-import { connect } from "react-redux";
-import { getFileName, setEditor } from "../../js/actions/action";
+// const fs = window.require('fs');
+const { ipcRenderer, dialog } = require('electron');
 
 class Editor extends React.Component {
   componentDidMount() {
     self.MonacoEnvironment = {
       getWorkerUrl: function(moduleId, label) {
-        if (label === "json") {
-          return "../dist/json.worker.bundle.js";
+        if (label === 'json') {
+          return '../dist/json.worker.bundle.js';
         }
-        if (label === "css") {
-          return "../dist/css.worker.bundle.js";
+        if (label === 'css') {
+          return '../dist/css.worker.bundle.js';
         }
-        if (label === "html") {
-          return "../dist/html.worker.bundle.js";
+        if (label === 'html') {
+          return '../dist/html.worker.bundle.js';
         }
-        if (label === "typescript" || label === "javascript") {
-          return "../dist/ts.worker.bundle.js";
+        if (label === 'typescript' || label === 'javascript') {
+          return '../dist/ts.worker.bundle.js';
         }
-        return "../dist/editor.worker.bundle.js";
+        return '../dist/editor.worker.bundle.js';
       }
     };
 
     const monacoEditor = monaco.editor.create(
       document.getElementById("editor-container"),
       {
-        value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join(
-          "\n"
+        value: ['function x() {\n\tconsole.log("Whatup world!"); \n}'].join(
+          '\n'
         ),
-        language: "javascript",
+        language: 'javascript',
         theme: 'vs-dark',
         dragAndDrop: true,
-        fontFamily: "monaco",
-        fontSize: 14
+        fontFamily: 'monaco',
+        fontSize: 14,
+        automaticLayout: true
       }
     );
 
     this.props.setEditor(monacoEditor);
-
     // listen for main process msg to inject text
     ipcRenderer.on('inject-text', (event, arg) => {
       let selection = this.props.editor.getSelection();
@@ -58,17 +58,25 @@ class Editor extends React.Component {
         text: "<Icon \n\tname='JoelReduxMaster' />", 
         forceMoveMarkers: true
       };
-      monacoEditor.executeEdits("my-source", [op]);
+      monacoEditor.executeEdits('my-source', [op]);
       ipcRenderer.send('save-file', this.props.editor.getValue())
-    })
+    });
 
     // // display selected file from menu in text editor
-    ipcRenderer.on("open-file", (event, arg, filename) => {
-      this.props.getFileName(filename);
+    ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
+      // create a model for each file
+      const allModels = [];
+      allFileNamesAndData.forEach(fileNameAndData => {
+        allModels.push(monaco.editor.createModel(
+          fileNameAndData[1],
+          'javascript'
+        ))
+      });
 
-      this.props.editor.setValue(arg);
-      console.log(arg);
+      this.props.editor.setModel(allModels[0])
+      this.props.getFileName(allModels[1]);
     });
+  
 
 // FILE TREE EDITOR DEVELOPMENT
 //     function openText() {
@@ -78,29 +86,31 @@ class Editor extends React.Component {
 //     ipcRenderer.on('open-button-clicked', (event, arg) => {
 //       monacoEditor.setValue(arg)
 //     })
-
-//   }
+  // }
 
 //    render() {
 //     return (
 //       <div id='editor-container'></div>
 //     )
-    
+
     // listen for main process prompt to save file
-    ipcRenderer.on("save-file", (event, arg) => {
-      console.log("filename", this.props.filename);
+    ipcRenderer.on('save-file', (event, arg) => {
+      console.log('in save file, arg', arg);
+      console.log('filename', this.props.filename);
 
       ipcRenderer.send(
-        "save-file",
+        'save-file',
         this.props.editor.getValue(),
         this.props.filename
       );
-    });
+    }); 
   }
+
+
 
   render() {
     // console.log('editor', this.props.editor);
-    return <div id="editor-container" />;
+    return <div id='editor-container' />;
   }
 }
 
