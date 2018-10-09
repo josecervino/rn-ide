@@ -5,10 +5,6 @@ const {
   shell,
   dialog,
   ipcMain
-<<<<<<< HEAD
-} = require('electron');
-const fs = require('fs');
-=======
 } = require("electron");
 const fs = require("fs");
 const {
@@ -16,7 +12,6 @@ const {
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS
 } = require("electron-devtools-installer"); // Adding Redux & React dev tools to Electron
->>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
 
 //  CREATING THE WINDOW -----------------------------
 
@@ -52,7 +47,6 @@ const injectText = function(text) {
 };
 
 //  FILE FUNCTIONS -----------------------------
-<<<<<<< HEAD
 // create menu 
 const openFile = function() {
   const options = {
@@ -65,11 +59,6 @@ const openFile = function() {
   };
 
   dialog.showOpenDialog(options, async (fileNames) => {
-=======
-// create menu
-const openFile = function(fileNames) {
-  dialog.showOpenDialog(fileNames => {
->>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
     if (fileNames === undefined) {
       console.log(`You didn't save the file`);
       return;
@@ -99,26 +88,6 @@ const openFile = function(fileNames) {
 
 // IN THE PROCESS OF SETTING UP LISTENER FOR OPENING FILE IN EDITOR
 function openFileClick(fileName) {
-<<<<<<< HEAD
-  console.log('inside openFileClick');
-  console.log('openFileClick filename:', fileName);
-  // open file in text editor
-  fs.readFile(fileName, 'utf-8', (err, data) => {
-    console.log('data in openFileClick:', data);
-    if (err) {
-      console.log('main.js error found', err);
-      // alert("An error ocurred reading the file :" + err.message);
-      return;
-    }
-    console.log('About to invoke mainWindow.webContents.send()');
-    // event.sender.send('open-button-clicked', data) // event not defined here
-    mainWindow.webContents.send('open-file', data); 
-    // Change how to handle the file content
-    console.log('The file content is : ' + data);
-    return data;
-  });
-};
-=======
   console.log("inside openFileClick");
   console.log("openFileClick filename:", fileName);
   // open file in text editor
@@ -132,7 +101,6 @@ function openFileClick(fileName) {
     console.log("About to invoke mainWindow.webContents.send()");
     // event.sender.send('open-button-clicked', data) // event not defined here
     mainWindow.webContents.send("open-file", data);
->>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
 
     // Change how to handle the file content
     console.log("The file content is : " + data);
@@ -197,15 +165,10 @@ const menuTemplate = [
           process.platform === 'darwin' ? 'Cmd+S' : 'Ctrl+Shift+S'
       },
       {
-<<<<<<< HEAD
-        label: 'Inject',
-        click: () => { injectText(); }
-=======
         label: "Inject!",
         click: () => {
           injectText();
         }
->>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
       }
     ]
   },
@@ -350,14 +313,7 @@ ipcMain.on('open-button-clicked', event => {
         alert('An error ocurred reading the file :' + err.message);
         return;
       }
-<<<<<<< HEAD
-      event.sender.send('open-button-clicked', data);
-
-      // Change how to handle the file content
-      console.log('The file content is : ' + data);
-=======
       event.sender.send("open-button-clicked", data);
->>>>>>> cc175043747bfe275b796ad36e85bf231b2b98a2
     });
   });
 });
