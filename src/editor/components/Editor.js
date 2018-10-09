@@ -26,6 +26,12 @@ class Editor extends React.Component {
       }
     };
 
+    const starterText = [
+      "function x() {",
+      '\tconsole.log("Whatup world!");',
+      "}"
+    ].join("\n");
+
     const monacoEditor = monaco.editor.create(
       document.getElementById("editor-container"),
       {
@@ -33,7 +39,7 @@ class Editor extends React.Component {
           "\n"
         ),
         language: "javascript",
-        theme: 'vs-dark',
+        theme: "vs-dark",
         dragAndDrop: true,
         fontFamily: "monaco",
         fontSize: 14,
@@ -44,49 +50,49 @@ class Editor extends React.Component {
     this.props.setEditor(monacoEditor);
 
     // listen for main process msg to inject text
-    ipcRenderer.on('inject-text', (event, arg) => {
+    ipcRenderer.on("inject-text", (event, arg) => {
       let selection = this.props.editor.getSelection();
       let range = new monaco.Range(
-        selection.startLineNumber, 
-        selection.startColumn, 
-        selection.endLineNumber, 
+        selection.startLineNumber,
+        selection.startColumn,
+        selection.endLineNumber,
         selection.endColumn
       );
-      let id = { major: 1, minor: 1 };             
+      let id = { major: 1, minor: 1 };
       let op = {
-        identifier: id, 
-        range: range, 
-        text: "<Icon \n\tname='JoelReduxMaster' />", 
+        identifier: id,
+        range: range,
+        text: "<Icon \n\tname='JoelReduxMaster' />",
         forceMoveMarkers: true
       };
       monacoEditor.executeEdits("my-source", [op]);
-      ipcRenderer.send('save-file', this.props.editor.getValue())
-    })
+      ipcRenderer.send("save-file", this.props.editor.getValue());
+    });
 
     // // display selected file from menu in text editor
     ipcRenderer.on("open-file", (event, arg, filename) => {
       this.props.getFileName(filename);
 
       this.props.editor.setValue(arg);
-      console.log(arg);
+      // console.log(arg);
     });
 
-// FILE TREE EDITOR DEVELOPMENT
-//     function openText() {
-//       ipcRenderer.send("open-button-clicked");
-//     }
-//     //display the opened file in text editor
-//     ipcRenderer.on('open-button-clicked', (event, arg) => {
-//       monacoEditor.setValue(arg)
-//     })
+    // FILE TREE EDITOR DEVELOPMENT
+    //     function openText() {
+    //       ipcRenderer.send("open-button-clicked");
+    //     }
+    //     //display the opened file in text editor
+    //     ipcRenderer.on('open-button-clicked', (event, arg) => {
+    //       monacoEditor.setValue(arg)
+    //     })
 
-//   }
+    //   }
 
-//    render() {
-//     return (
-//       <div id='editor-container'></div>
-//     )
-    
+    //    render() {
+    //     return (
+    //       <div id='editor-container'></div>
+    //     )
+
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
       console.log("filename", this.props.filename);
@@ -100,7 +106,6 @@ class Editor extends React.Component {
   }
 
   render() {
-    // console.log('editor', this.props.editor);
     return <div id="editor-container" />;
   }
 }

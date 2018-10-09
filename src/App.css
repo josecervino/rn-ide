@@ -1,4 +1,6 @@
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -14,13 +16,14 @@ App Container
 .App {
   display: grid;
   width: 100%;
-  height: 100vh;
-  grid-template-areas:'tree editor editor editor editor'
-                      'tree editor editor editor editor'
-                      'tree editor editor editor editor'
-                      'footer footer footer footer footer';
+  grid-template-areas:
+    "tree  tab  tab  tab  tab"
+    "tree editor editor editor editor"
+    "tree editor editor editor editor"
+    "tree editor editor editor editor"
+    "footer footer footer footer footer";
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr) 20px;
+  grid-template-rows: 2em repeat(3, 1fr) 25px;
 }
 
 /*
@@ -28,10 +31,64 @@ Editor Styling
 */
 .editor {
   grid-area: editor;
+  height: 75vh;
 }
+
+/* Tab styles */
+.tabContainer {
+  display: -webkit-inline-box;
+}
+.tab {
+  grid-area: tab;
+  background: #3f4448;
+}
+
+ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+.tabi {
+  border-right: 1px solid #3f4448;
+}
+.tabi > ul > li {
+  list-style: none;
+  padding: 0;
+}
+.tabi > ul > li > a {
+  cursor: pointer;
+  background: #041421;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+}
+/* .nav > li {
+  bottom: 0.7em;
+}
+.navbar-nav {
+  margin: 0;
+  margin-left: 0;
+}
+.navbar-nav > li > a {
+  padding-bottom: 3px;
+  margin-right: 1px;
+  background: red;
+  border-radius: 1px;
+}
+.navbar {
+  height: 0;
+  min-height: 30px;
+  margin-bottom: 0;
+}
+.container {
+  height: 0;
+}
+li {
+  padding: 0;
+} */
 #editor-container {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 /*
@@ -41,7 +98,6 @@ Footer Styling
   grid-area: footer;
   background: #747474;
 }
-
 
 /*
 Tree Styling
@@ -79,8 +135,6 @@ li:hover {
   font-weight: bold;
   border-radius: 15px;
 }
-
-
 
 /*
 Utilities
