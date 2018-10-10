@@ -21,7 +21,7 @@ const todos = (state = initialState, action) => {
     case "SAVE_TEXT":
       return {
         ...state,
-        filename: action.payload
+        filename: [...state.filename, action.payload]
       };
     case SET_RANGE:
       return {

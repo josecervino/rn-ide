@@ -1,7 +1,14 @@
 import { SET_INPUT, SET_SELECTION } from '../actions/constants';
 
+const initialInput = {
+  alignItems: '',
+  justifyContent: '',
+  animating: '',
+  size: '',
+  color: '',
+}
 const initialState = {
-  input: {},
+  input: initialInput,
   range: 9,
   selection: 'center',
 };

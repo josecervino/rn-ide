@@ -47,6 +47,12 @@ class Editor extends React.Component {
       }
     };
 
+    const starterText = [
+      "function x() {",
+      '\tconsole.log("Whatup world!");',
+      "}"
+    ].join("\n");
+
     const monacoEditor = monaco.editor.create(
       document.getElementById("editor-container"),
       {
@@ -54,7 +60,7 @@ class Editor extends React.Component {
           "\n"
         ),
         language: "javascript",
-        theme: 'vs-dark',
+        theme: "vs-dark",
         dragAndDrop: true,
         fontFamily: "monaco",
         fontSize: 14,
@@ -65,7 +71,7 @@ class Editor extends React.Component {
     this.props.setEditor(monacoEditor);
 
     // listen for main process msg to inject text
-    ipcRenderer.on('inject-text', (event, arg) => {
+    ipcRenderer.on("inject-text", (event, arg) => {
       let selection = this.props.editor.getSelection();
     let range = new monaco.Range(
       selection.startLineNumber,
@@ -101,7 +107,7 @@ class Editor extends React.Component {
         forceMoveMarkers: true
       };
       // console.log({newRange});
-      console.log({op});
+      // console.log({op});
 
       // this.props.setCoords(coord);
       monacoEditor.executeEdits("my-source", [op]);
@@ -121,7 +127,6 @@ class Editor extends React.Component {
       this.props.getFileName(filename);
 
       this.props.editor.setValue(arg);
-      console.log(arg);
     });
 
 // FILE TREE EDITOR DEVELOPMENT
@@ -142,8 +147,6 @@ class Editor extends React.Component {
 
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
-      console.log("filename", this.props.filename);
-
       ipcRenderer.send(
         "save-file",
         this.props.editor.getValue(),
@@ -166,7 +169,6 @@ class Editor extends React.Component {
   }
 
   render() {
-    // console.log('editor', this.props.editor);
     return <div id="editor-container" />;
   }
 }

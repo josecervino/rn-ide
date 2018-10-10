@@ -5,7 +5,7 @@ import {
 } from './constants';
 
 export const setInputValue = (item, input) => {
-  console.log({ input });
+  // console.log({ input });
   return {
     type: SET_INPUT,
     item,

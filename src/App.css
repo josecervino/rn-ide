@@ -1,12 +1,19 @@
-body {
+*,
+*:before,
+*:after {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+body {
   display: block;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Roboto, sans-serif;
 }
 
+/*
+App Container
+*/
 .App {
-  /* text-align: center; */
   display: grid;
   width: 100%;
   grid-template-areas:'tree editor editor editor gui'
@@ -14,25 +21,70 @@ body {
                       'tree editor editor editor gui'
                       'footer footer footer footer footer';
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr) 25px;
+  grid-template-rows: 2em repeat(3, 1fr) 25px;
 }
 
+/*
+Editor Styling
+*/
 .editor {
   grid-area: editor;
   height: 75vh;
-  /* border : 1px solid red; */
+}
+
+/* Tab styles */
+.tabContainer {
+  display: -webkit-inline-box;
+}
+.tab {
+  grid-area: tab;
+  background: #3f4448;
+}
+
+ul {
+  margin-left: 0;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.tabi > ul > li {
+  list-style: none;
+  padding: 0;
+}
+.tabi > ul > li > a {
+  cursor: pointer;
+  background: #041421;
+  color: white;
+  border-right: 1px solid #61dafb;
+  text-decoration: none;
+  padding: 1.05em 1em;
+}
+.tabi > ul > li > a span {
+  position: relative;
+  top: 5px;
 }
 #editor-container {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
+/*
+Footer Styling
+*/
+.footer {
+  grid-area: footer;
+  background: #61dafb;
+}
+
+/*
+Tree Styling
+*/
 .tree {
   grid-area: tree;
   background: #61616157;
   overflow-y: scroll;
-  max-height: 75vh;
-  /* border : 1px solid blue; */
+  /* justify-content: left; */
 }
 
 .gui {
@@ -40,11 +92,36 @@ body {
   background: #F5F5F5;
   overflow-y: scroll;
   max-height: 75vh;
-  /* border : 2px solid red; */
-
 }
 
-.footer {
-  grid-area: footer;
+li {
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  padding: 6px;
+  list-style: none;
+  color: #1f1f1f;
+}
+li:hover {
+  color: #3f3f3f;
+  font-weight: bold;
+}
+
+#btn-updatefile {
+  justify-self: center;
+  padding: 8px;
+  background: none;
+  font-weight: bold;
+  border: 1px solid black;
+  border-radius: 3px;
+  transition: 0.1s;
+}
+#btn-updatefile:hover {
   background: #747474;
+  font-weight: bold;
+  border-radius: 15px;
 }
+
+/*
+Utilities
+*/
