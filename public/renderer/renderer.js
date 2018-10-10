@@ -14,26 +14,8 @@ const FileRenderer = {
         properties: ["openDirectory", "openFile"]
       },
       selectedFiles => {
-
-        //  PREVIOUS CODE -------------
-        // let path = selectedFiles[0];
-        // // console.log('initial path', path);
-        // if (!fs.lstatSync(path).isDirectory()) {
-        //   //get the filename
-        //   var filename = path.replace(/^.*[\\\/]/, "");
-        //   if (document.getElementById(path)) {
-        //     return;
-        //   } else {
-        //     //append the filename to the DOM when it is clicked on  to open it
-        //     document.getElementById(
-        //       "display-files"
-        //     ).innerHTML += `<li id=${path} onclick="FileRenderer.openFile(this.id)"><i class="fa fa-file"></i>${filename}</li>`; //Files are appended to the DOM
-        //   }
-        // ---------------------------
-
         console.log('selectedFiles structure:', selectedFiles);
         let path = selectedFiles[0];
-        // console.log('initial path', path);
         if (!fs.lstatSync(path).isDirectory()) {
           //get the filename
           var filename = path.replace(/^.*[\\\/]/, "");
@@ -48,7 +30,7 @@ const FileRenderer = {
 
         } else {
           //if the path has a directory, call the readfolder function
-          console.log('readFolder fork in folder about to be ivoked.')
+          console.log('readFolder fork in folder about to be invoked.')
           FileRenderer.readFolder(path + "/");
         }
       }
@@ -97,7 +79,6 @@ const FileRenderer = {
 
   //open the file with the default app
   openFile: function(path) {
-    // shell.openItem(path);
     console.log('in the openFile renderer method, about to invoke ipcRenderer.send')
     ipcRenderer.send('open-file-in-editor', path);
   },

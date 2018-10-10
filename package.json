@@ -35,6 +35,8 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
+    "@material-ui/core": "^3.2.0",
+    "@material-ui/icons": "^3.0.1",
     "concurrently": "^4.0.1",
     "css-loader": "^1.0.0",
     "monaco-editor": "^0.14.2",

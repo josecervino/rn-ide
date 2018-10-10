@@ -68,7 +68,7 @@ const openFile = function(fileNames) {
 };
 
 // IN THE PROCESS OF SETTING UP LISTENER FOR OPENING FILE IN EDITOR
-function openFileClick(fileName) {
+function openFileFromTree(fileName) {
   console.log('inside openFileClick');
   console.log('openFileClick filename:', fileName);
     // open file in text editor
@@ -298,7 +298,7 @@ ipcMain.on("open-button-clicked", event => {
 });
 
 ipcMain.on('open-file-in-editor', (event, path) => {
-  openFileClick(path);
+  openFileFromTree(path);
 })
 
 
