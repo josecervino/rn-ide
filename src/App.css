@@ -16,12 +16,10 @@ App Container
 .App {
   display: grid;
   width: 100%;
-  grid-template-areas:
-    "tree  tab  tab  tab  tab"
-    "tree editor editor editor editor"
-    "tree editor editor editor editor"
-    "tree editor editor editor editor"
-    "footer footer footer footer footer";
+  grid-template-areas:'tree editor editor editor gui'
+                      'tree editor editor editor gui'
+                      'tree editor editor editor gui'
+                      'footer footer footer footer footer';
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 2em repeat(3, 1fr) 25px;
 }
@@ -88,6 +86,14 @@ Tree Styling
   overflow-y: scroll;
   /* justify-content: left; */
 }
+
+.gui {
+  grid-area: gui;
+  background: #F5F5F5;
+  overflow-y: scroll;
+  max-height: 75vh;
+}
+
 li {
   font-size: 12px;
   font-family: Arial, Helvetica, sans-serif;
