@@ -1,7 +1,7 @@
 import React from 'react';
 import * as monaco from 'monaco-editor';
 import { connect } from 'react-redux';
-import { getFileName, setEditor } from '../../js/actions/action';
+import { getFileNames, setEditor } from '../../js/actions/action';
 
 // const fs = window.require('fs');
 const { ipcRenderer, dialog } = require('electron');
@@ -81,10 +81,14 @@ class Editor extends React.Component {
       });
 
       this.props.editor.setModel(allModels[0])
-      debugger;
-      this.props.getFileName([allModels[0].uri.path, allModels[1].uri.path]);
+      // debugger;
+      let allFilePaths = allModels.map((model) => {
+        return model.uri.path
+      })
+      console.log(allFilePaths);
+      this.props.getFileNames(allFilePaths);
       
-      console.log(this.props.getFileName(allModels[0].uri.path, allModels[1].uri.path));
+      // console.log(this.props.getFileNames([allModels[0].uri.path, allModels[1].uri.path]));
     });
   
 
@@ -93,12 +97,10 @@ class Editor extends React.Component {
       ipcRenderer.send(
         'save-file',
         this.props.editor.getValue(),
-        this.props.filename
+        this.props.filenames
       );
     }); 
   }
-
-
 
   render() {
     return <div id="editor-container" />;
@@ -108,13 +110,13 @@ class Editor extends React.Component {
 function mapStateToProps(state) {
   return {
     editor: state.editorReducer.editor,
-    filename: state.editorReducer.filename
+    filenames: state.editorReducer.filenames
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
     setEditor: editor => dispatch(setEditor(editor)),
-    getFileName: filename => dispatch(getFileName(filename))
+    getFileNames: filenames => dispatch(getFileNames(filenames))
   };
 }
 

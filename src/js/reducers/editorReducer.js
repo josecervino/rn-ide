@@ -1,26 +1,38 @@
 let initialState = {
   editor: "Unloaded editor",
-  filename: []
+  filenames: [],
+  models: {},
+  activeModel: {}
 };
 
-const todos = (state = initialState, action) => {
+const editorReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_EDITOR":
-    debugger; 
+    // debugger; 
       return {
         ...state,
         editor: action.payload
       };
-
-    case "SAVE_TEXT":
-      debugger; 
+    case "GET_FILE_NAMES":
+      // debugger; 
       return {
         ...state,
-        filename: [...state.filename, ...action.payload]
+        filenames: [...state.filenames, ...action.payload]
       };
+    case "SET_ACTIVE_MODEL":
+      // debugger;
+      return {
+        ...state,
+        activeModel: state.models[action.payload]
+      };
+    case "ADD_MODEL":
+      return {
+        ...state,
+        models: action.payload 
+      }
     default:
       return state;
   }
 };
 
-export default todos;
+export default editorReducer;

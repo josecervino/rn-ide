@@ -3,7 +3,12 @@ export const setEditor = editor => ({
   payload: editor
 });
 
-export const getFileName = filename => ({
-  type: "SAVE_TEXT",
-  payload: filename
+export const getFileNames = filenames => ({
+  type: "GET_FILE_NAMES",
+  payload: filenames
 });
+
+export const setActiveModel = filename => ({ 
+  type: "SET_ACTIVE_MODEL", 
+  payload: filename 
+}); 
