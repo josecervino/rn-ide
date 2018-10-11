@@ -1,15 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getFileNames } from "../../js/actions/action";
+import { getFileNames, setActiveModel, setEditor } from "../../js/actions/action";
 
 //pass the title props from the state into this component
 function TabContainer(props) {
   return (
-    <nav className="tabi">
+    <nav className="tabi" onClick={props.onClick} >
       <ul>
         <li>
           <a>
-            <span> {props.name}</span>
+            <span> {props.name} </span>
           </a>
         </li>
       </ul>
@@ -24,8 +24,7 @@ class Tab extends React.Component {
   }
 
   handleClick(e, filename) {
-    e.preventDefault();
-    console.log('IN HANDLE CLICK', filename);
+    this.props.setActiveModel(filename)
   }
 
   render() {
@@ -50,7 +49,6 @@ class Tab extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    // reduxState: state,
     editor: state.editorReducer.editor,
     filenames: state.editorReducer.filenames,
     activeModel: state.editorReducer.activeModel 
