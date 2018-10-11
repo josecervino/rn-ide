@@ -1,42 +1,64 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getFileName } from "../../js/actions/action";
+import { func } from "prop-types";
 
-//pass the title props from the state into this component
+function CloseIcon() {
+  return <p id="close">&#10006;</p>;
+}
+
+function removeTab(filepath) {
+  if (filepath === "") {
+    console.log("empty path");
+  } else {
+    console.log("remove tab", filepath);
+  }
+}
 function TabContainer(props) {
   return (
     <nav className="tabi">
       <ul>
         <li>
-          <a>
-            <span> {props.name}</span>
+          <a className="tab_name">
+            <span className="tabName">{props.name}</span>
+            <span
+              className="closeX"
+              onClick={() => {
+                if (props.filepath === "") {
+                  console.log("empty path");
+                } else {
+                  console.log("remove tab", props.filepath);
+                }
+              }}
+            >
+              {props.close.props.children}
+            </span>
           </a>
         </li>
       </ul>
     </nav>
   );
 }
+
 class Tab extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
-    console.log("click me");
   }
   render() {
     let filename = this.props.filename;
     if (!filename || filename.length === 0) {
-      return <TabContainer name="filename" onclick={this.handleClick()} />;
+      return (
+        <TabContainer name="filename" close={CloseIcon()} filepath="" id="x" />
+      );
     } else {
       return (
         <div className="tabContainer">
           {filename.map((ele, index) => (
             <TabContainer
               key={index}
+              filepath={ele}
               name={ele.replace(/^.*[\\\/]/, "")}
-              onclick={this.handleClick()}
+              close={CloseIcon()}
             />
           ))}
         </div>
@@ -44,6 +66,7 @@ class Tab extends React.Component {
     }
   }
 }
+
 function mapStateToProps(state) {
   return {
     // reduxState: state,

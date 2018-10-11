@@ -71,6 +71,8 @@ class Editor extends React.Component {
 
     // // display selected file from menu in text editor
     ipcRenderer.on("open-file", (event, arg, filename) => {
+      console.log("from editor", filename);
+
       this.props.getFileName(filename);
 
       this.props.editor.setValue(arg);
