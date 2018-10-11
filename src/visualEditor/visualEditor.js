@@ -95,10 +95,10 @@ class VisualEditor extends Component {
     this.props.editor.executeEdits('input', [
       { range: range, text: event.target.value }
     ]);
-    // console.log({range});
+    console.log({range});
     const newRange = { ...range };
     newRange.endColumn = (newRange.startColumn + event.target.value.length);
-    // console.log({newRange});
+    console.log({newRange});
     const updatedRange = { ...this.props.range };
     updatedRange[item] = newRange
     this.props.setRange(updatedRange);

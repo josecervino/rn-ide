@@ -72,6 +72,11 @@ class Editor extends React.Component {
 
     // listen for main process msg to inject text
     ipcRenderer.on("inject-text", (event, arg) => {
+      const decoration = this.props.editor.deltaDecorations([],
+      [
+        { range: new monaco.Range(2,1,2,50), options: { inlineClassName: 'myInlineDecoration' }},
+      ]);
+      console.log({decoration});
       let selection = this.props.editor.getSelection();
     let range = new monaco.Range(
       selection.startLineNumber,
@@ -91,6 +96,14 @@ class Editor extends React.Component {
         size: { lineStart: 6, lineEnd: 6, colStart: 8, colEnd: 13 },
         color: { lineStart: 7, lineEnd: 7, colStart: 9, colEnd: 14 },
       };
+      // console.log('text', text.split(''));
+
+      const textArr = text.split('')
+
+      for (let i=0; i<textArr.length; i++){
+        if (textArr[i] === '\t') console.log('tab', textArr[i]);
+      }
+
       this.props.setCoords(coord);
       // console.log({range});
       let id = { major: 1, minor: 1 };

@@ -122,6 +122,13 @@ li:hover {
   border-radius: 15px;
 }
 
+.myInlineDecoration {
+	color: blue !important;
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: bold;
+	font-style: oblique;
+}
 /*
 Utilities
 */
