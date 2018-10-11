@@ -12,3 +12,9 @@ export const setActiveModel = filename => ({
   type: "SET_ACTIVE_MODEL", 
   payload: filename 
 }); 
+
+export const addModels = models => ({ 
+  type: "ADD_MODELS", 
+  payload: models 
+}); 
+

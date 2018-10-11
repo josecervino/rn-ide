@@ -8,27 +8,27 @@ let initialState = {
 const editorReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_EDITOR":
-    // debugger; 
       return {
         ...state,
         editor: action.payload
       };
     case "GET_FILE_NAMES":
-      // debugger; 
       return {
         ...state,
         filenames: [...state.filenames, ...action.payload]
       };
     case "SET_ACTIVE_MODEL":
-      // debugger;
+      let index =  state.filenames.indexOf(action.payload)
+      let activeModel = state.models[index] || {}
+      state.editor.setModel(activeModel)
       return {
         ...state,
-        activeModel: state.models[action.payload]
+        activeModel: activeModel
       };
-    case "ADD_MODEL":
+    case "ADD_MODELS":
       return {
         ...state,
-        models: action.payload 
+        models: {...state.models, ...action.payload}
       }
     default:
       return state;

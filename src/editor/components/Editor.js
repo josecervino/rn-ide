@@ -1,7 +1,7 @@
 import React from 'react';
 import * as monaco from 'monaco-editor';
 import { connect } from 'react-redux';
-import { getFileNames, setEditor } from '../../js/actions/action';
+import { getFileNames, setEditor, setActiveModel, addModels } from '../../js/actions/action';
 
 // const fs = window.require('fs');
 const { ipcRenderer, dialog } = require('electron');
@@ -24,13 +24,7 @@ class Editor extends React.Component {
         }
         return '../dist/editor.worker.bundle.js';
       }
-    };
-
-    const starterText = [
-      "function x() {",
-      '\tconsole.log("Whatup world!");',
-      "}"
-    ].join("\n");
+    };  
 
     const monacoEditor = monaco.editor.create(
       document.getElementById("editor-container"),
@@ -46,8 +40,7 @@ class Editor extends React.Component {
         automaticLayout: true
       }
     );
-
-    this.props.setEditor(monacoEditor);
+    this.props.setEditor(monacoEditor)
     // listen for main process msg to inject text
     ipcRenderer.on("inject-text", (event, arg) => {
       let selection = this.props.editor.getSelection();
@@ -70,28 +63,22 @@ class Editor extends React.Component {
 
     // // display selected file from menu in text editor
     ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
-      // create a model for each file
-      const allModels = [];
-      allFileNamesAndData.forEach(fileNameAndData => {
-        allModels.push(monaco.editor.createModel(
+      let allModels = allFileNamesAndData.map((fileNameAndData) => {
+        return monaco.editor.createModel(
           fileNameAndData[1],
           'javascript',
           monaco.Uri.from({ path: fileNameAndData[0] })
-        ))
-      });
-
+        )}
+      )
+      this.props.addModels(allModels)
       this.props.editor.setModel(allModels[0])
-      // debugger;
+
       let allFilePaths = allModels.map((model) => {
         return model.uri.path
       })
-      console.log(allFilePaths);
       this.props.getFileNames(allFilePaths);
-      
-      // console.log(this.props.getFileNames([allModels[0].uri.path, allModels[1].uri.path]));
     });
   
-
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
       ipcRenderer.send(
@@ -110,13 +97,16 @@ class Editor extends React.Component {
 function mapStateToProps(state) {
   return {
     editor: state.editorReducer.editor,
-    filenames: state.editorReducer.filenames
+    filenames: state.editorReducer.filenames,
+    activeModel: state.editorReducer.activeModel
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
     setEditor: editor => dispatch(setEditor(editor)),
-    getFileNames: filenames => dispatch(getFileNames(filenames))
+    getFileNames: filenames => dispatch(getFileNames(filenames)),
+    setActiveModel: filename => dispatch(setActiveModel(filename)),
+    addModels: models => dispatch(addModels(models))
   };
 }
 
