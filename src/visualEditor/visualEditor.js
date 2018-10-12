@@ -74,7 +74,11 @@ class VisualEditor extends Component {
   }
 
   changeText (event, item){
-    const range = { ...this.props.range[item] };
+    const range = { ...this.props.range[item].range };
+    console.log({range});
+    this.props.editor.executeEdits('input', [
+      { range: range, text: event.target.value }
+    ]);
     // let selection =  new monaco.Selection(this.props.range)
     // console.log({selection});
     // this.props.editor.setSelection(selection)
@@ -92,16 +96,13 @@ class VisualEditor extends Component {
     // range.endColumn = (event.target.value.length > 1 ? range.endColumn : (range.endColumn + this.props.coords.alignItems.colEnd));
 
 
-    this.props.editor.executeEdits('input', [
-      { range: range, text: event.target.value }
-    ]);
-    console.log({range});
-    const newRange = { ...range };
-    newRange.endColumn = (newRange.startColumn + event.target.value.length);
-    console.log({newRange});
-    const updatedRange = { ...this.props.range };
-    updatedRange[item] = newRange
-    this.props.setRange(updatedRange);
+    // console.log({range});
+    // const newRange = { ...range };
+    // newRange.endColumn = (newRange.startColumn + event.target.value.length);
+    // console.log({newRange});
+    // const updatedRange = { ...this.props.range };
+    // updatedRange[item] = newRange
+    // this.props.setRange(updatedRange);
   }
 
   onChangeSelection (event) {

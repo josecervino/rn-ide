@@ -1,7 +1,8 @@
 import {
   SET_RANGE,
-   SET_COORDS,
-   } from '../actions/constants';
+  SET_COORDS,
+  SET_ITEM_RANGE,
+} from '../actions/constants';
 
 const initialState = {
   editor: 'Unloaded editor',
@@ -50,6 +51,11 @@ const editorReducer = (state = initialState, action) => {
         ...state,
         models: { ...state.models, ...action.payload },
       };
+    case SET_ITEM_RANGE: {
+      const newState = { ...state };
+      newState.currentRange[action.item].range = action.payload;
+      return newState;
+    }
     default:
       return state;
   }

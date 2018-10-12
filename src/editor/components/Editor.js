@@ -11,7 +11,8 @@ import {
   setCoords,
   setActiveModel,
   addModels,
-  getFileNames
+  getFileNames,
+  setItemRange
 } from "../../js/actions/action";
 
 // const line1 = '<ActivityIndicatorIOS '
@@ -74,20 +75,35 @@ class Editor extends React.Component {
       //   { range: new monaco.Range(2,1,2,50), options: { inlineClassName: 'myInlineDecoration' }},
       // ]);
 
-      console.log('active model: ', this.props.activeModel);
+      // console.log('active model: ', this.props.activeModel);
 
     const decoration = this.props.activeModel.deltaDecorations([],
       [
         { range: new monaco.Range(2,1,2,50), options: { inlineClassName: 'myInlineDecoration' }},
       ]);
-      console.log('decoration id', decoration[0]);
-      console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
+      // console.log('decoration id', decoration[0]);
+      // console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
 
       this.props.activeModel.onDidChangeDecorations((decorationEvent)=> {
-        console.log({decorationEvent});
-        console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
-
-        console.log('decoration changed');
+        const { range } = this.props;
+        for (let item in range){
+          const id = range[item].decoration[0];
+          // const id = property.decoration[0];
+          // console.log({id});
+          const decorationRange = this.props.activeModel.getDecorationRange(id)
+          const oldRange = range[item].range
+          // console.log({oldRange});
+          // console.log({decorationRange});
+          if (decorationRange.endColumn !== range[item].range.endColumn){
+            console.log({oldRange});
+            console.log({decorationRange});
+            this.props.setItemRange(item, decorationRange)
+          }
+        }
+        // console.log({decorationEvent});
+        // console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
+        //
+        // console.log('decoration changed');
       })
 
       let selection = this.props.editor.getSelection();
@@ -113,9 +129,9 @@ class Editor extends React.Component {
 
       const textArr = text.split('')
 
-      for (let i=0; i<textArr.length; i++){
-        if (textArr[i] === '\t') console.log('tab', textArr[i]);
-      }
+      // for (let i=0; i<textArr.length; i++){
+      //   if (textArr[i] === '\t') console.log('tab', textArr[i]);
+      // }
 
       this.props.setCoords(coord);
       // console.log({range});
@@ -143,6 +159,7 @@ class Editor extends React.Component {
       // range.startColumn = (range.startColumn + this.props.coords.alignItems.colStart);
       // range.endColumn = (range.endColumn + this.props.coords.alignItems.colEnd);
       const updatedRange = this.getRange(range, coord)
+      console.log({updatedRange});
       this.props.setRange(updatedRange);
     // }
       ipcRenderer.send('save-file', this.props.editor.getValue())
@@ -200,7 +217,13 @@ class Editor extends React.Component {
       range.endLineNumber = (range.endLineNumber + coordinates[item].lineEnd);
       range.startColumn = (range.startColumn + coordinates[item].colStart);
       range.endColumn = (range.endColumn + coordinates[item].colEnd);
-      newRange[item] = range;
+      newRange[item] = { range };
+
+      const decoration = this.props.activeModel.deltaDecorations([],
+        [
+          { range: range, options: { inlineClassName: 'myInlineDecoration' }},
+        ]);
+      newRange[item] = { ...newRange[item], decoration };
     }
     return newRange;
   }
@@ -228,7 +251,8 @@ function mapDispatchToProps(dispatch) {
     setCoords: coords => dispatch(setCoords(coords)),
     getFileNames: filenames => dispatch(getFileNames(filenames)),
     setActiveModel: filename => dispatch(setActiveModel(filename)),
-    addModels: models => dispatch(addModels(models))
+    addModels: models => dispatch(addModels(models)),
+    setItemRange: (item, range) => dispatch(setItemRange(item, range))
   };
 }
 

@@ -1,6 +1,7 @@
 import {
   SET_RANGE,
   SET_COORDS,
+  SET_ITEM_RANGE,
 } from './constants';
 
 export const setEditor = editor => ({
@@ -36,4 +37,10 @@ export const setActiveModel = filename => ({
 export const addModels = models => ({
   type: "ADD_MODELS",
   payload: models
+});
+
+export const setItemRange = (item, range) => ({
+  type: SET_ITEM_RANGE,
+  item,
+  payload: range,
 });
