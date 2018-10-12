@@ -15,6 +15,10 @@ import {
   setItemRange
 } from "../../js/actions/action";
 
+import {
+  setInputValue
+} from '../../js/actions/vizEditorActions';
+
 // const line1 = '<ActivityIndicatorIOS '
 // const line2 = 'style={{ '
 // const line3 = `alignItems: 'center', `
@@ -85,19 +89,29 @@ class Editor extends React.Component {
       // console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
 
       this.props.activeModel.onDidChangeDecorations((decorationEvent)=> {
-        const { range } = this.props;
+        const {
+          range,
+          activeModel,
+          setItemRange,
+          currentInput,
+          setInputValue,
+        } = this.props;
         for (let item in range){
           const id = range[item].decoration[0];
           // const id = property.decoration[0];
           // console.log({id});
-          const decorationRange = this.props.activeModel.getDecorationRange(id)
+          const decorationRange = activeModel.getDecorationRange(id)
           const oldRange = range[item].range
           // console.log({oldRange});
           // console.log({decorationRange});
           if (decorationRange.endColumn !== range[item].range.endColumn){
             console.log({oldRange});
             console.log({decorationRange});
-            this.props.setItemRange(item, decorationRange)
+            const currVal = activeModel.getValueInRange(decorationRange);
+            if (currentInput[item] !== currVal ){
+              setInputValue(item, currVal);
+            }
+            setItemRange(item, decorationRange)
           }
         }
         // console.log({decorationEvent});
@@ -240,7 +254,8 @@ function mapStateToProps(state) {
     range: state.editorReducer.currentRange,
     coords: state.editorReducer.coords,
     filenames: state.editorReducer.filenames,
-    activeModel: state.editorReducer.activeModel
+    activeModel: state.editorReducer.activeModel,
+    currentInput: state.vizEditorReducer.input,
   };
 }
 function mapDispatchToProps(dispatch) {
@@ -252,7 +267,8 @@ function mapDispatchToProps(dispatch) {
     getFileNames: filenames => dispatch(getFileNames(filenames)),
     setActiveModel: filename => dispatch(setActiveModel(filename)),
     addModels: models => dispatch(addModels(models)),
-    setItemRange: (item, range) => dispatch(setItemRange(item, range))
+    setItemRange: (item, range) => dispatch(setItemRange(item, range)),
+    setInputValue: (item, input) => dispatch(setInputValue(item, input)),
   };
 }
 
