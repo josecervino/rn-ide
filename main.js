@@ -7,14 +7,17 @@ const {
   ipcMain
 } = require("electron");
 const fs = require("fs");
-const { default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer'); // Adding Redux & React dev tools to Electron
+const {
+  default: installExtension,
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS
+} = require("electron-devtools-installer"); // Adding Redux & React dev tools to Electron
 
 //  CREATING THE WINDOW -----------------------------
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-
 
 function createWindow() {
   // Create the browser window.
@@ -40,11 +43,11 @@ function createWindow() {
 
 // inject text
 const injectText = function(text) {
-  mainWindow.webContents.send('inject-text', text);
+  mainWindow.webContents.send("inject-text", text);
 };
 
 //  FILE FUNCTIONS -----------------------------
-// create menu 
+// create menu
 const openFile = function(fileNames) {
   dialog.showOpenDialog(fileNames => {
     if (fileNames === undefined) {
@@ -114,9 +117,6 @@ const saveFile = function(fileName) {
   });
 };
 
-
-
-
 //  MENU TEMPLATE FUNCITONS -----------------------------
 
 const menuTemplate = [
@@ -142,8 +142,10 @@ const menuTemplate = [
         }
       },
       {
-        label: 'Inject!',
-        click: () => { injectText(); }
+        label: "Inject!",
+        click: () => {
+          injectText();
+        }
       }
     ]
   },
@@ -219,7 +221,7 @@ const menuTemplate = [
 
 if (process.platform === "darwin") {
   menuTemplate.unshift({
-    label: app.getName(''),
+    label: app.getName(""),
     submenu: [
       { role: "about" },
       { type: "separator" },
@@ -251,8 +253,6 @@ if (process.platform === "darwin") {
     { role: "front" }
   ];
 }
-
-
 
 //  EVENT LISTENERS -----------------------------
 
@@ -299,7 +299,12 @@ ipcMain.on('open-file-in-editor', (event, path) => {
   openFileFromTree(path);
 })
 
+//   mainWindow.webContents.send('open-file', data);
 
+//   // Change how to handle the file content
+//   console.log("The file content is : " + data);
+// });
+// });
 
 //  APP FUNCITONS -----------------------------
 
@@ -308,11 +313,12 @@ ipcMain.on('open-file-in-editor', (event, path) => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
 
-app.on('ready', () => {
-  [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => { // Adding the React & redux dev tools
+app.on("ready", () => {
+  [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
+    // Adding the React & redux dev tools
     installExtension(extension)
-        .then((name) => console.log(`Added Extension: ${name}`))
-        .catch((err) => console.log('An error occurred: ', err));
+      .then(name => console.log(`Added Extension: ${name}`))
+      .catch(err => console.log("An error occurred: ", err));
   });
 });
 
