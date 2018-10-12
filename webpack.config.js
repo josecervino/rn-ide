@@ -8,7 +8,7 @@ module.exports = {
 	},
 	target: 'electron-main',
 	entry: {
-		"app": './src/index.js',
+		"app": ['babel-polyfill', './src/index.js'],
 		"editor.worker": 'monaco-editor/esm/vs/editor/editor.worker.js',
 		"json.worker": 'monaco-editor/esm/vs/language/json/json.worker',
 		"css.worker": 'monaco-editor/esm/vs/language/css/css.worker',

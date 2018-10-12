@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css"; 
-import TreeContainer from './filetree/TreeContainer';
+import LeftPanelContainer from './leftPanel/LeftPanelContainer';
 import EditorContainer from './editor/editorContainer';
 
 
@@ -13,8 +13,8 @@ class App extends Component {
           <EditorContainer />
         </div>
 
-        <div className='tree'>
-          <TreeContainer />
+        <div className='left-panel'>
+          <LeftPanelContainer />
         </div>
 
         <div className='footer'>

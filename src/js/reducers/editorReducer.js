@@ -2,7 +2,7 @@ const initialState = {
   editor: "Unloaded editor",
   filename: ""
 };
-
+ 
 const todos = (state = initialState, action) => {
   switch (action.type) {
     case "SET_EDITOR":
@@ -20,5 +20,5 @@ const todos = (state = initialState, action) => {
       return state;
   }
 };
-
+ 
 export default todos;

@@ -70,22 +70,6 @@ class Editor extends React.Component {
       this.props.editor.setValue(arg);
       console.log(arg);
     });
-
-// FILE TREE EDITOR DEVELOPMENT
-//     function openText() {
-//       ipcRenderer.send("open-button-clicked");
-//     }
-//     //display the opened file in text editor
-//     ipcRenderer.on('open-button-clicked', (event, arg) => {
-//       monacoEditor.setValue(arg)
-//     })
-
-//   }
-
-//    render() {
-//     return (
-//       <div id='editor-container'></div>
-//     )
     
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
@@ -100,7 +84,6 @@ class Editor extends React.Component {
   }
 
   render() {
-    // console.log('editor', this.props.editor);
     return <div id="editor-container" />;
   }
 }
