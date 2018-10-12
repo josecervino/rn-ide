@@ -1,20 +1,20 @@
-*,
+/* *,
 *:before,
 *:after {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-}
+} */
 
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-body {
+/* body {
   display: block;
   font-family: Roboto, sans-serif;
-}
+} */
 
 /*
 App Container
@@ -22,12 +22,18 @@ App Container
 .App {
   display: grid;
   width: 100%;
-  grid-template-areas:'tree editor editor editor gui'
-                      'tree editor editor editor gui'
-                      'tree editor editor editor gui'
-                      'footer footer footer footer footer';
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 2em repeat(3, 1fr) 25px;
+  grid-template-areas:
+    "tree tree tab tab tab tab tab tab tab gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui";
+
+  /* "footer footer footer footer footer"; */
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 2em repeat(3, 1fr) 0.1fr;
 }
 
 /*
@@ -35,7 +41,7 @@ Editor Styling
 */
 .editor {
   grid-area: editor;
-  height: 75vh;
+  /* height: 75vh; */
 }
 
 /* Tab styles */
@@ -103,12 +109,12 @@ Tree Styling
   grid-area: tree;
   background: #61616157;
   overflow-y: scroll;
-  /* justify-content: left; */
+  justify-content: left;
 }
 
 .gui {
   grid-area: gui;
-  background: #F5F5F5;
+  background: #f5f5f5;
   overflow-y: scroll;
   max-height: 75vh;
 }

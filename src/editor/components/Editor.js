@@ -24,8 +24,8 @@ import {
 // const text = [line1, line2, line3, line4,line5, line6, line7, line8, line9];
 
 class Editor extends React.Component {
-  constructor (props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.getRange = this.getRange.bind(this);
   }
   componentDidMount() {
@@ -73,23 +73,23 @@ class Editor extends React.Component {
     // listen for main process msg to inject text
     ipcRenderer.on("inject-text", (event, arg) => {
       let selection = this.props.editor.getSelection();
-    let range = new monaco.Range(
-      selection.startLineNumber,
-      selection.startColumn,
-      selection.endLineNumber,
-      selection.endColumn
-    );
+      let range = new monaco.Range(
+        selection.startLineNumber,
+        selection.startColumn,
+        selection.endLineNumber,
+        selection.endColumn
+      );
       // for (let i = 0; i < text.length; i++){
-      const space = '\t'
+      const space = "\t";
       const offset = space.repeat(range.startColumn);
       const endOffSet = space.repeat(range.startColumn - 1);
-      const text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`
+      const text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`;
       const coord = {
         alignItems: { lineStart: 2, lineEnd: 2, colStart: 14, colEnd: 20 },
         justifyContent: { lineStart: 3, lineEnd: 3, colStart: 18, colEnd: 24 },
         animating: { lineStart: 5, lineEnd: 5, colStart: 12, colEnd: 16 },
         size: { lineStart: 6, lineEnd: 6, colStart: 8, colEnd: 13 },
-        color: { lineStart: 7, lineEnd: 7, colStart: 9, colEnd: 14 },
+        color: { lineStart: 7, lineEnd: 7, colStart: 9, colEnd: 14 }
       };
       this.props.setCoords(coord);
       // console.log({range});
@@ -116,36 +116,36 @@ class Editor extends React.Component {
       // range.endLineNumber = (range.endLineNumber + this.props.coords.alignItems.lineEnd);
       // range.startColumn = (range.startColumn + this.props.coords.alignItems.colStart);
       // range.endColumn = (range.endColumn + this.props.coords.alignItems.colEnd);
-      const updatedRange = this.getRange(range, coord)
+      const updatedRange = this.getRange(range, coord);
       this.props.setRange(updatedRange);
-    // }
-      ipcRenderer.send('save-file', this.props.editor.getValue())
-    })
+      // }
+      ipcRenderer.send("save-file", this.props.editor.getValue());
+    });
 
     // // display selected file from menu in text editor
     ipcRenderer.on("open-file", (event, arg, filename) => {
-      console.log("from editor", filename);
+      // console.log("from editor", filename);
 
       this.props.getFileName(filename);
 
       this.props.editor.setValue(arg);
     });
 
-// FILE TREE EDITOR DEVELOPMENT
-//     function openText() {
-//       ipcRenderer.send("open-button-clicked");
-//     }
-//     //display the opened file in text editor
-//     ipcRenderer.on('open-button-clicked', (event, arg) => {
-//       monacoEditor.setValue(arg)
-//     })
+    // FILE TREE EDITOR DEVELOPMENT
+    //     function openText() {
+    //       ipcRenderer.send("open-button-clicked");
+    //     }
+    //     //display the opened file in text editor
+    //     ipcRenderer.on('open-button-clicked', (event, arg) => {
+    //       monacoEditor.setValue(arg)
+    //     })
 
-//   }
+    //   }
 
-//    render() {
-//     return (
-//       <div id='editor-container'></div>
-//     )
+    //    render() {
+    //     return (
+    //       <div id='editor-container'></div>
+    //     )
 
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
@@ -157,14 +157,15 @@ class Editor extends React.Component {
     });
   }
 
-  getRange (inputRange, coordinates) {
-    const newRange = {}
-    for (let item in coordinates){
+  getRange(inputRange, coordinates) {
+    const newRange = {};
+    for (let item in coordinates) {
       const range = { ...inputRange };
-      range.startLineNumber = (range.startLineNumber + coordinates[item].lineStart)
-      range.endLineNumber = (range.endLineNumber + coordinates[item].lineEnd);
-      range.startColumn = (range.startColumn + coordinates[item].colStart);
-      range.endColumn = (range.endColumn + coordinates[item].colEnd);
+      range.startLineNumber =
+        range.startLineNumber + coordinates[item].lineStart;
+      range.endLineNumber = range.endLineNumber + coordinates[item].lineEnd;
+      range.startColumn = range.startColumn + coordinates[item].colStart;
+      range.endColumn = range.endColumn + coordinates[item].colEnd;
       newRange[item] = range;
     }
     return newRange;
@@ -180,7 +181,7 @@ function mapStateToProps(state) {
     editor: state.editorReducer.editor,
     filename: state.editorReducer.filename,
     range: state.editorReducer.currentRange,
-    coords: state.editorReducer.coords,
+    coords: state.editorReducer.coords
   };
 }
 function mapDispatchToProps(dispatch) {
