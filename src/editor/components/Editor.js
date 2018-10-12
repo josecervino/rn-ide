@@ -3,7 +3,6 @@ import * as monaco from 'monaco-editor';
 import { connect } from 'react-redux';
 import { getFileNames, setEditor, setActiveModel, addModels } from '../../js/actions/action';
 
-// const fs = window.require('fs');
 const { ipcRenderer, dialog } = require('electron');
 
 class Editor extends React.Component {
@@ -63,20 +62,21 @@ class Editor extends React.Component {
 
     // // display selected file from menu in text editor
     ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
-      let allModels = allFileNamesAndData.map((fileNameAndData) => {
-        return monaco.editor.createModel(
+      let allModels = allFileNamesAndData.reduce((acc, fileNameAndData) => {
+        if (!acc[fileNameAndData[0]]) {
+          let model = monaco.editor.createModel(
           fileNameAndData[1],
           'javascript',
-          monaco.Uri.from({ path: fileNameAndData[0] })
-        )}
-      )
-      this.props.addModels(allModels)
-      this.props.editor.setModel(allModels[0])
+          monaco.Uri.from({ path: fileNameAndData[0] }))
+          acc[model.uri.path] = model
+        }
+        return acc
+      }, {})
+      this.props.addModels(allModels) 
 
-      let allFilePaths = allModels.map((model) => {
-        return model.uri.path
-      })
+      let allFilePaths = Object.keys(allModels)
       this.props.getFileNames(allFilePaths);
+      this.props.editor.setModel(allModels[allFilePaths[0]])
     });
   
     // listen for main process prompt to save file
