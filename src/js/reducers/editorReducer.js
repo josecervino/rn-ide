@@ -8,20 +8,32 @@ const initialState = {
   filename: '',
   currentRange: 0,
   coords: {},
+  editor: "Unloaded editor",
+  filenames: [],
+  models: {},
+  activeModel: {}
 };
 
-const todos = (state = initialState, action) => {
+const editorReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_EDITOR":
       return {
         ...state,
         editor: action.payload
       };
-
-    case "SAVE_TEXT":
+    case "GET_FILE_NAMES":
       return {
         ...state,
-        filename: [...state.filename, action.payload]
+        filenames: [...state.filenames, ...action.payload]
+      };
+    case "SET_ACTIVE_MODEL":
+      console.log('active model set');
+      let index =  state.filenames.indexOf(action.payload)
+      let activeModel = state.models[index] || {}
+      state.editor.setModel(activeModel)
+      return {
+        ...state,
+        activeModel: activeModel
       };
     case SET_RANGE:
       return {
@@ -33,9 +45,14 @@ const todos = (state = initialState, action) => {
         ...state,
         coords: action.payload,
       };
+    case 'ADD_MODELS':
+      return {
+        ...state,
+        models: { ...state.models, ...action.payload },
+      };
     default:
       return state;
   }
 };
 
-export default todos;
+export default editorReducer;

@@ -1,14 +1,17 @@
-import React from "react";
-import * as monaco from "monaco-editor";
-const fs = window.require("fs");
-const { ipcRenderer, dialog } = require("electron");
+import React from 'react';
+import * as monaco from 'monaco-editor';
+import { connect } from 'react-redux';
+// import { getFileNames, setEditor, setActiveModel, addModels } from '../../js/actions/action';
 
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 import {
   getFileName,
   setEditor,
   setRange,
-  setCoords
+  setCoords,
+  setActiveModel,
+  addModels,
+  getFileNames
 } from "../../js/actions/action";
 
 // const line1 = '<ActivityIndicatorIOS '
@@ -22,6 +25,8 @@ import {
 // const line9 = '/>'
 //
 // const text = [line1, line2, line3, line4,line5, line6, line7, line8, line9];
+// const fs = window.require('fs');
+const { ipcRenderer, dialog } = require('electron');
 
 class Editor extends React.Component {
   constructor (props){
@@ -31,52 +36,60 @@ class Editor extends React.Component {
   componentDidMount() {
     self.MonacoEnvironment = {
       getWorkerUrl: function(moduleId, label) {
-        if (label === "json") {
-          return "../dist/json.worker.bundle.js";
+        if (label === 'json') {
+          return '../dist/json.worker.bundle.js';
         }
-        if (label === "css") {
-          return "../dist/css.worker.bundle.js";
+        if (label === 'css') {
+          return '../dist/css.worker.bundle.js';
         }
-        if (label === "html") {
-          return "../dist/html.worker.bundle.js";
+        if (label === 'html') {
+          return '../dist/html.worker.bundle.js';
         }
-        if (label === "typescript" || label === "javascript") {
-          return "../dist/ts.worker.bundle.js";
+        if (label === 'typescript' || label === 'javascript') {
+          return '../dist/ts.worker.bundle.js';
         }
-        return "../dist/editor.worker.bundle.js";
+        return '../dist/editor.worker.bundle.js';
       }
     };
-
-    const starterText = [
-      "function x() {",
-      '\tconsole.log("Whatup world!");',
-      "}"
-    ].join("\n");
 
     const monacoEditor = monaco.editor.create(
       document.getElementById("editor-container"),
       {
-        value: ["function x() {", '\tconsole.log("Whatup world!");', "}"].join(
-          "\n"
+        value: ['function x() {\n\tconsole.log("Whatup world!"); \n}'].join(
+          '\n'
         ),
-        language: "javascript",
-        theme: "vs-dark",
+        language: 'javascript',
+        theme: 'vs-dark',
         dragAndDrop: true,
-        fontFamily: "monaco",
+        fontFamily: 'monaco',
         fontSize: 14,
         automaticLayout: true
       }
     );
-
-    this.props.setEditor(monacoEditor);
-
+    this.props.setEditor(monacoEditor)
     // listen for main process msg to inject text
     ipcRenderer.on("inject-text", (event, arg) => {
-      const decoration = this.props.editor.deltaDecorations([],
+      // const decoration = this.props.editor.deltaDecorations([],
+      // [
+      //   { range: new monaco.Range(2,1,2,50), options: { inlineClassName: 'myInlineDecoration' }},
+      // ]);
+
+      console.log('active model: ', this.props.activeModel);
+
+    const decoration = this.props.activeModel.deltaDecorations([],
       [
         { range: new monaco.Range(2,1,2,50), options: { inlineClassName: 'myInlineDecoration' }},
       ]);
-      console.log({decoration});
+      console.log('decoration id', decoration[0]);
+      console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
+
+      this.props.activeModel.onDidChangeDecorations((decorationEvent)=> {
+        console.log({decorationEvent});
+        console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
+
+        console.log('decoration changed');
+      })
+
       let selection = this.props.editor.getSelection();
     let range = new monaco.Range(
       selection.startLineNumber,
@@ -136,10 +149,21 @@ class Editor extends React.Component {
     })
 
     // // display selected file from menu in text editor
-    ipcRenderer.on("open-file", (event, arg, filename) => {
-      this.props.getFileName(filename);
+    ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
+      let allModels = allFileNamesAndData.map((fileNameAndData) => {
+        return monaco.editor.createModel(
+          fileNameAndData[1],
+          'javascript',
+          monaco.Uri.from({ path: fileNameAndData[0] })
+        )}
+      )
+      this.props.addModels(allModels)
+      this.props.editor.setModel(allModels[0])
 
-      this.props.editor.setValue(arg);
+      let allFilePaths = allModels.map((model) => {
+        return model.uri.path
+      })
+      this.props.getFileNames(allFilePaths);
     });
 
 // FILE TREE EDITOR DEVELOPMENT
@@ -161,9 +185,9 @@ class Editor extends React.Component {
     // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
       ipcRenderer.send(
-        "save-file",
+        'save-file',
         this.props.editor.getValue(),
-        this.props.filename
+        this.props.filenames
       );
     });
   }
@@ -192,6 +216,8 @@ function mapStateToProps(state) {
     filename: state.editorReducer.filename,
     range: state.editorReducer.currentRange,
     coords: state.editorReducer.coords,
+    filenames: state.editorReducer.filenames,
+    activeModel: state.editorReducer.activeModel
   };
 }
 function mapDispatchToProps(dispatch) {
@@ -199,7 +225,10 @@ function mapDispatchToProps(dispatch) {
     setEditor: editor => dispatch(setEditor(editor)),
     getFileName: filename => dispatch(getFileName(filename)),
     setRange: range => dispatch(setRange(range)),
-    setCoords: coords => dispatch(setCoords(coords))
+    setCoords: coords => dispatch(setCoords(coords)),
+    getFileNames: filenames => dispatch(getFileNames(filenames)),
+    setActiveModel: filename => dispatch(setActiveModel(filename)),
+    addModels: models => dispatch(addModels(models))
   };
 }
 
