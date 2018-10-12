@@ -4,7 +4,7 @@ import * as monaco from "monaco-editor";
 
 import { setInputValue, setSelection } from '../js/actions/vizEditorActions';
 import { setRange } from '../js/actions/action';
-
+ 
 
 class VisualEditor extends Component {
 
@@ -20,7 +20,7 @@ class VisualEditor extends Component {
   }
 
   componentDidMount(){
-
+ 
     // let selection =  this.props.editor.selection(1,1,1,9)
 
   }
@@ -162,7 +162,7 @@ class VisualEditor extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state) {  // Automatically triggered whenever there's a change in state. We re-assign current values in props to new values coming in from Redux props
   return {
     alignVal: state.vizEditorReducer.input.alignItems,
     justifyContent: state.vizEditorReducer.input.justifyContent,
@@ -175,7 +175,7 @@ function mapStateToProps(state) {
     coords: state.editorReducer.coords,
   };
 }
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {  // Importing action-creators into props and passing in their return value as an argument for dispatch to pass to the Reducer. They get invoked 
   return {
     setInputValue: (item, input) => dispatch(setInputValue(item, input)),
     setRange: range => dispatch(setRange(range)),

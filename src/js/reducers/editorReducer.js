@@ -10,14 +10,14 @@ const initialState = {
   coords: {},
 };
  
-const todos = (state = initialState, action) => {
+const todos = (state = initialState, action) => {  //action is object from bqehjdcvjhds
   switch (action.type) {
     case "SET_EDITOR":
       return {
         ...state,
         editor: action.payload
       };
-
+  
     case "SAVE_TEXT":
       return {
         ...state,
@@ -38,4 +38,6 @@ const todos = (state = initialState, action) => {
   }
 };
  
+// Reduced returns updated state
+
 export default todos;

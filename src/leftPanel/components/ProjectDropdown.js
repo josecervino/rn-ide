@@ -1,5 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';  // Allows us to TypeCheck our state models
+import { connect } from "react-redux";
+import {
+  getContents,
+  setProjectPath
+} from '../../js/actions/leftPanelActions'
 
 //  IMPORTED FROM RENDERER.JS  -----------------
 const fs = require("fs");
@@ -7,8 +12,7 @@ const path = require("path");
 const { shell } = require("electron");
 const { dialog } = require("electron").remote;  // Accessing Main process method using .remote
 const {ipcRenderer} = require('electron');
-//----------------------------------------------
-
+//---------------------------------------------
 
 class ProjectDropdown extends React.Component {
 
@@ -16,100 +20,45 @@ class ProjectDropdown extends React.Component {
 
 // SETTING STATE UP, STATIC & LOCAL ------------------------------------------------------
 
-  shape = {  // FILE MODEL
-    id: PropTypes.string.isRequired,  // Unique id for each element
-    name: PropTypes.string.isRequred,  // Name of file/folder
-    path: PropTypes.string.isRequired,  // Path of every file to be used to open in text editor
-    // options: PropTypes.arrayOf(Prop.Type.shape(Tree.shape))  // Array of nested Tree.shape's
-  };
+  // shape = {  // FILE MODEL
+  //   id: PropTypes.string.isRequired,  // Unique id for each element
+  //   name: PropTypes.string.isRequred,  // Name of file/folder
+  //   path: PropTypes.string.isRequired,  // Path of every file to be used to open in text editor
+  //   // options: PropTypes.arrayOf(Prop.Type.shape(Tree.shape))  // Array of nested Tree.shape's
+  // };
 
-  static propTypes = {  // STANDARD PROJECT-DROPDOWN FOLDER MODEL
-    openDirection: PropTypes.oneOf(['down', 'right']), // Direction of dropdown caret
-    displayText: PropTypes.string.isRequired,  // Text displayed for element
-    hasCaret: PropTypes.bool,  // Boolean that adds caret or not
-    options: PropTypes.arrayOf(  
-      PropTypes.shape(ProjectDropdown.shape).isRequired
-    ).isRequired // Array of submenu contents, file and folder names
-  };
+  // static propTypes = {  // STANDARD PROJECT-DROPDOWN FOLDER MODEL
+  //   openDirection: PropTypes.oneOf(['down', 'right']), // Direction of dropdown caret
+  //   displayText: PropTypes.string.isRequired,  // Text displayed for element
+  //   hasCaret: PropTypes.bool,  // Boolean that adds caret or not
+  //   options: PropTypes.arrayOf(  
+  //     PropTypes.shape(ProjectDropdown.shape).isRequired
+  //   ).isRequired // Array of submenu contents, file and folder names
+  // };
 
-  static defaultProps = {  // Default props for every ProjectDropdown component, which is why it isn't explicitly required in propTypes
-    hasCaret: true,
-    openDirection: 'down'
-  };
+  // static defaultProps = {  // Default props for every ProjectDropdown component, which is why it isn't explicitly required in propTypes
+  //   hasCaret: true,
+  //   openDirection: 'down'
+  // };
 
   constructor(props) {  // [ISSUE] Props is not being passed down from parent component
     super(props);
 
     this.state = {  // Setting a local state per duplicate ProjectDropdown component
-      selectedPath: null,
+      // selectedPath: null,
       showDropdown: false, // To toggle entire dropdown interface - use is questionable
-      selectedIds: []  // Array of submenus hovered over (loaded)
+      selectedIds: [],  // Array of submenus hovered over (loaded)
+      toggleButton: true
     }
+    this.printProps = this.printProps.bind(this);
   };
 
 // STATE SET-UP BY THIS POINT  ------------------------------------------------------
 // ----------------------------------------------------------------------------------
 // SETTING UP RECURSIVE RENDER & STATE MANIPULATION FUNCTIONS -----------------------
 
-openFolder = () => {
-
-  let pathVar = null;
-  let options = null;
-
-  let dialogVar = dialog.showOpenDialog( // Wrap dialog box in async?
-    {
-      properties: ["openDirectory", "openFile", "multiSelections"]
-    },
-    async (selectedFiles) => {
-      let path = selectedFiles[0];
-
-      if (!fs.lstatSync(path).isDirectory()) {
-        let fileName = path.replace(/^.*[\\\/]/, "");  // removing anything that isn't the filename and its file-type
-        ipcRenderer.send('open-file-in-editor', path, fileName);  // Sending path and fileName to Main Process
-      }
-      else {
-        pathVar = path;
-
-        options = fs.readdirSync(path);
-        console.log('pathVar & options:', pathVar, options);
-
-        // const asyncReadDir = () => {
-        //   return new Promise((resolve, reject) => {
-        //     fs.readdirSync(path, (err, files) => {
-        //       if (err) {
-        //         console.log('Error in Read Dir Promise:', err);
-        //         reject(err);
-        //       }
-        //       else {
-        //         console.log('about to resolve')
-        //         resolve(files);
-        //       }
-        //     })
-        //   })
-        // }
-
-        // await asyncReadDir().then(function(files) {
-        //   options = files;
-        //   console.log('files & path after read directory:', options, path)
-        //   debugger;
-        //   console.log('this:',this)
-        // }).catch(err => console.log('Read Directory Error:', err));
-
-// [CURRENT PROBLEM] Not receiving file names synchronously, so set state isn't changing the state
-
-      }
-
-        // this.setState({
-        //   selectedIds: options,
-        //   selectedPath: pathVar
-        // }) 
-      
-      return options;
-    })  // End of dialog box
-
-  console.log('dialog variable:', dialogVar)
-  // console.log('at end of openFolder');
-  // console.log('state', this.state);
+  printProps() {
+    console.log('ProjectDropdown props upon loading:', this.props);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -149,7 +98,7 @@ openFolder = () => {
   renderDisplay() {
     const classes = classNames({
       'dropdown__dispay': true,
-      'dropdown__display--with-caret': this.props.hasCaret
+      'dropdown__display--with-caret': this.props.hasCaret  // non-exisstent props
     }),
     caret = (  // [ISSUE] Replace 
       <Icon 
@@ -172,7 +121,7 @@ openFolder = () => {
   renderSubMenu(options, depthLevel = 0) {
     if (this.state.showDropdown !== true) {  // if the submenu has already been rendered, don't render it
       return null;
-    }
+    } 
 
     const classes = ['dropdown__options'];
     classes.push(`dropdown__options--${this.props.openDirection}--align`);  // Adding direction of caret to classes constant above
@@ -218,31 +167,46 @@ openFolder = () => {
 // STANDARD RENDER FUNCTION ---------------------------------------------------------
 
   render() {
-    if (this.state.selectedIds.length && this.state.selectedPath !== null) {
-      return (
-        <div
-          className='dropdown dropdown--nested'
-          onClick={ this.handleDropdownToggle }
-        >
-          { this.renderDisplay() }
-          { this.renderSubMenu(this.props.options) }
-        </div>
-      );
-    }
-    else {
-      return (
-        <div id='left-panel-container'>
+    return (
+      <div id='left-panel-container'>
+        { this.printProps() }
         <input 
           id='open-folder-button'
           type='button' 
-          onClick={ this.openFolder }
-          value='Open a Folder'
-          ></input>
+          onClick={ this.printProps }
+          value='Open a Folder 2'
+        ></input>
       </div>
-      );
-    }
+    );
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    selectedPath: state.leftPanelReducer.selectedPath,
+    pathContents: state.leftPanelReducer.pathContents
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    setProjectPath: (path) => dispatch(setProjectPath(setProjectPath(path))),
+    getContents: (path) => dispatch(getContents(path)),
+  }
+}
 
-export default ProjectDropdown;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectDropdown);
+
+
+// return (
+//   <div
+//     className='dropdown dropdown--nested'
+//     onClick={ this.handleDropdownToggle }
+//   >
+//     { this.printProps() }
+//     { this.renderDisplay() }
+//     {/* { this.renderSubMenu(this.props.options) } */}
+//   </div>
+// );

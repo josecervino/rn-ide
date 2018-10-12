@@ -4,7 +4,7 @@ import {
 } from './constants';
 
 export const setEditor = editor => ({
-  type: 'SET_EDITOR',
+  type: 'SET_EDITOR', 
   payload: editor,
 });
 
@@ -22,4 +22,3 @@ export const setCoords = coords => ({
   type: SET_COORDS,
   payload: coords,
 });
-

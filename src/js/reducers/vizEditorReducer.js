@@ -2,7 +2,7 @@ import { SET_INPUT, SET_SELECTION } from '../actions/constants';
 
 const initialInput = {
   alignItems: '',
-  justifyContent: '',
+  justifyContent: '', 
   animating: '',
   size: '',
   color: '',

@@ -3,14 +3,14 @@ import * as monaco from "monaco-editor";
 const fs = window.require("fs");
 const { ipcRenderer, dialog } = require("electron");
 
-import { connect } from "react-redux";
-import {
+import { connect } from "react-redux";  // connects store to this component
+import {  
   getFileName,
   setEditor,
   setRange,
   setCoords
 } from "../../js/actions/action";
-
+ 
 // const line1 = '<ActivityIndicatorIOS '
 // const line2 = 'style={{ '
 // const line3 = `alignItems: 'center', `
@@ -68,7 +68,7 @@ class Editor extends React.Component {
       }
     );
 
-    this.props.setEditor(monacoEditor);
+    this.props.setEditor(monacoEditor);  //calling function saved to prop via mapDispatchToProps
 
     // listen for main process msg to inject text
     ipcRenderer.on("inject-text", (event, arg) => {
@@ -157,7 +157,7 @@ class Editor extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state) {  //automatically called whenever there's been a change to state
   return {
     editor: state.editorReducer.editor,
     filename: state.editorReducer.filename,
@@ -165,7 +165,7 @@ function mapStateToProps(state) {
     coords: state.editorReducer.coords,
   };
 }
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {  //adding these functions to prop
   return {
     setEditor: editor => dispatch(setEditor(editor)),
     getFileName: filename => dispatch(getFileName(filename)),
