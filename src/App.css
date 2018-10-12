@@ -119,18 +119,6 @@ Tree Styling
   max-height: 75vh;
 }
 
-/* li {
-  font-size: 12px;
-  font-family: Arial, Helvetica, sans-serif;
-  cursor: pointer;
-  padding: 6px;
-  list-style: none;
-  color: #1f1f1f;
-}
-li:hover {
-  color: #3f3f3f;
-  font-weight: bold;
-} */
 #btn-updatefile {
   justify-self: center;
   padding: 8px;
