@@ -16,7 +16,7 @@ const {ipcRenderer} = require('electron');
 
 class ProjectDropdown extends React.Component {
 
-  static displayName = 'ProjectDropdown';  // Used for error handling, dead code, to be removed in production
+  static displayName = 'ProjectDropdown';   // Used for error handling, dead code, to be removed in production
 
 // SETTING STATE UP, STATIC & LOCAL ------------------------------------------------------
 
@@ -168,14 +168,13 @@ class ProjectDropdown extends React.Component {
 
   render() {
     return (
-      <div id='left-panel-container'>
+      <div
+        className='dropdown dropdown--nested'
+        onClick={ this.handleDropdownToggle }
+      >
         { this.printProps() }
-        <input 
-          id='open-folder-button'
-          type='button' 
-          onClick={ this.printProps }
-          value='Open a Folder 2'
-        ></input>
+        { this.renderDisplay() }
+        {/* { this.renderSubMenu(this.props.options) } */}
       </div>
     );
   }
@@ -201,12 +200,13 @@ export default connect(
 
 
 // return (
-//   <div
-//     className='dropdown dropdown--nested'
-//     onClick={ this.handleDropdownToggle }
-//   >
+//   <div id='left-panel-container'>
 //     { this.printProps() }
-//     { this.renderDisplay() }
-//     {/* { this.renderSubMenu(this.props.options) } */}
+//     <input 
+//       id='open-folder-button'
+//       type='button' 
+//       onClick={ this.printProps }
+//       value='Open a Folder 2'
+//     ></input>
 //   </div>
 // );
