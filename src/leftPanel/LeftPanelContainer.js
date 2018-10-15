@@ -14,7 +14,7 @@ class LeftPanelContainer extends React.Component {
     super(props)
   }
 
-  openFolder = () => {
+  openFolder = () => {  // This probably shouldn't be here, all business logic is supposed to be in Redux. 
     dialog.showOpenDialog(
       {
         properties: ["openDirectory", "openFile", "multiSelections"]

@@ -6,176 +6,106 @@ import {
   setProjectPath
 } from '../../js/actions/leftPanelActions'
 
-//  IMPORTED FROM RENDERER.JS  -----------------
-const fs = require("fs");
-const path = require("path");
-const { shell } = require("electron");
-const { dialog } = require("electron").remote;  // Accessing Main process method using .remote
 const {ipcRenderer} = require('electron');
-//---------------------------------------------
+
+import { withStyles } from '@material-ui/core/styles';  // Exported with component using a created "styles" variable to apply to the component
+import ListSubheader from '@material-ui/core/ListSubheader';  // Adds a title to the top of the menu
+import List from '@material-ui/core/List';  // "div" of the entire list component
+import ListItem from '@material-ui/core/ListItem';  // "div" for individual list items within component
+import ListItemIcon from '@material-ui/core/ListItemIcon';  // "div" for selected icon to use for the menu
+import ListItemText from '@material-ui/core/ListItemText';  // Designates text you want to add for the list item
+import Collapse from '@material-ui/core/Collapse';  // Nested List functionality
+import ClosedFolder from '@material-ui/icons/Folder';  // Imported Closed Folder icon
+import OpenFolder from '@material-ui/icons/FolderOpen';  // Imported Open Folder Icon
+import Menu from '@material-ui/icons/MoreHoriz';  // Menu button for files & folders
+import ExpandLess from '@material-ui/icons/MoreHoriz';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import { promisify } from 'util';
+import { worker } from 'cluster';
+
 
 class ProjectDropdown extends React.Component {
 
-  static displayName = 'ProjectDropdown';   // Used for error handling, dead code, to be removed in production
-
-// SETTING STATE UP, STATIC & LOCAL ------------------------------------------------------
-
-  // shape = {  // FILE MODEL
-  //   id: PropTypes.string.isRequired,  // Unique id for each element
-  //   name: PropTypes.string.isRequred,  // Name of file/folder
-  //   path: PropTypes.string.isRequired,  // Path of every file to be used to open in text editor
-  //   // options: PropTypes.arrayOf(Prop.Type.shape(Tree.shape))  // Array of nested Tree.shape's
-  // };
-
-  // static propTypes = {  // STANDARD PROJECT-DROPDOWN FOLDER MODEL
-  //   openDirection: PropTypes.oneOf(['down', 'right']), // Direction of dropdown caret
-  //   displayText: PropTypes.string.isRequired,  // Text displayed for element
-  //   hasCaret: PropTypes.bool,  // Boolean that adds caret or not
-  //   options: PropTypes.arrayOf(  
-  //     PropTypes.shape(ProjectDropdown.shape).isRequired
-  //   ).isRequired // Array of submenu contents, file and folder names
-  // };
-
-  // static defaultProps = {  // Default props for every ProjectDropdown component, which is why it isn't explicitly required in propTypes
-  //   hasCaret: true,
-  //   openDirection: 'down'
-  // };
-
-  constructor(props) {  // [ISSUE] Props is not being passed down from parent component
+  constructor(props) {
     super(props);
 
-    this.state = {  // Setting a local state per duplicate ProjectDropdown component
-      // selectedPath: null,
-      showDropdown: false, // To toggle entire dropdown interface - use is questionable
-      selectedIds: [],  // Array of submenus hovered over (loaded)
+    this.state = {
+      folderToggles: {},
+      showDropdown: false,
       toggleButton: true
     }
-    this.printProps = this.printProps.bind(this);
+    this.handleDropdown = this.handleDropdown.bind(this);
+    this.renderFolders = this.renderFolders.bind(this);
   };
 
-// STATE SET-UP BY THIS POINT  ------------------------------------------------------
-// ----------------------------------------------------------------------------------
-// SETTING UP RECURSIVE RENDER & STATE MANIPULATION FUNCTIONS -----------------------
-
-  printProps() {
-    console.log('ProjectDropdown props upon loading:', this.props);
+  openFolder(currentPath, fileName) {
+    console.log('inside openF');
+    ipcRenderer.send('open-file-in-editor', currentPath, fileName);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.options !== nextProps.options 
-      || this.state.showDropdown !== nextState.showDropdown
-      || this.state.selectedIds !== nextState.selectedIds;
-  };
-
-  handleDropdownToggle = () => {  // Flips the state of a dropdown from it's current state, erases interior ids
-    let nextState = !this.state.showDropdown;
-
-    this.setState({
-      showDropdown: nextState,
-      selectedIds: []
-    })
-  };
-
-  handleDropdownClose = () => {  // Changes state, explicitely sets showDropdown to false, erases interior ids
-    this.setState({
-      showDropdown: false,
-      selectedIds: []
-    })
-  };
-
-  handleSelectedId = (selected, depthLevel) => {  // Resetting selectedIds to selected input at the set depth level
-    return () => {
-      const updatedArray = this.state.selectedIds.slice(0);  // Copying array, setting it to a copy of the previous content array
-
-      updatedArray[depthLevel] = selected;  // Set selected dropdown and its options array to the dropdown's depthLevel
-
-      this.setState({
-        slectedIds: updatedArray
-      })
-    }
-  };
-
-  renderDisplay() {
-    const classes = classNames({
-      'dropdown__dispay': true,
-      'dropdown__display--with-caret': this.props.hasCaret  // non-exisstent props
-    }),
-    caret = (  // [ISSUE] Replace 
-      <Icon 
-        classes={ ['dropdown__display-caret'] }
-        glyph={ iconChevronDown }
-        size={ 'small' }
-      />
-    );
-
-    // Passes in above classes constant as className, renders a caret if applicable & the display name
-    return (  // [ISSUE] Add folder methods and link/path
-      <div className={ classes }>
-        { this.props.hasCaret ? caret : null }
-        { this.props.displayText }
-      </div>
-    )
+  handleDropdown(folderId) {
+    console.log('inside handleDropdown')
+    console.log(this.state.folderToggles[folderId])
+    this.state.folderToggles[folderId] = !this.state.folderToggles[folderId];
+    console.log(this.state.folderToggles[folderId])
   }
 
-  // Recursive call to render subMenu's
-  renderSubMenu(options, depthLevel = 0) {
-    if (this.state.showDropdown !== true) {  // if the submenu has already been rendered, don't render it
-      return null;
-    } 
+  renderSubFolders(folderPath, id = null) {
+    let counter = 1;
+    let options = this.props.pathContents ? this.props.pathContents : fs.readdirSync(folderPath); 
 
-    const classes = ['dropdown__options'];
-    classes.push(`dropdown__options--${this.props.openDirection}--align`);  // Adding direction of caret to classes constant above
+    const subFolderContents = options.map((option) => {
+      let path = `${folderPath}/${option}`;
+      counter += 1;
 
-    const menuOptions = options.map(option => {  // map through current options, options being the paths or names in/from the parent folder
-      // option = current value in options array
-
-      const display = (option.link  // [ISSUE] Need attached link to display if it's a folder
-        ? <a href={ option.link }>{ option.name }</a>
-        : <span>{ option.message }</span>
-        );  // what we display in out map return, dynamically populated by options element properties
-
-      let subMenu;  // Where we store recursive renders
-
-      if ((this.state.selectedIds[depthLevel] === option.id) && hasOptions) {
-          const newDepthLevel = depthLevel + 1;
-
-          subMenu = this.renderSubMenu(option.options, newDepthLevel);  // We go into the array of contents the selected folder has, passing the next depthLevel as a base
+      if (fs.lstatSync(path).isFile()) {
+        return (
+          <ListItem button onClick={() => this.openFolder(path, option) } path={ path } name={ option }>
+            <ListItemText inset primary={ option } />
+          </ListItem>
+        )
       }
-
-      return (
-        <li
-          key={ option.id }
-          onMouseEnter={ this.handleSelectedId(option.id, depthLevel) }
-        >
-          { display }
-          { subMenu }
-        </li>
-      );
+      else {
+        this.state.folderToggles[`${option}${counter}`] = false;
+        let compId = `${option}${counter}`;
+        return (
+          <React.Fragment>
+            <ListItem button id={ compId } onMouseOver={() => this.renderSubFolders(path, compId)} onClick={() => this.handleDropdown(compId)} path={ `${path}/`} name={ option }>
+              <ListItemIcon>
+                <ClosedFolder />
+              </ListItemIcon>
+              <ListItemText inset primary={ option } />
+            </ListItem>
+            { this.state.folderToggles[`${option}${counter}`] ? <ExpandLess/> : <ExpandMore /> }
+              <Collapse in={ this.state.folderToggles[`${option}${counter}`] } timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItem button >
+                    <ListItemText inset primary="FUCK YEAH BRO" />
+                  </ListItem>
+                </List>
+              </Collapse>
+          </React.Fragment>
+        )
+      }
     });
 
     return (
-      <div className={ classNames.apply(null, classes) }>
-        <ul>
-          { menuOptions }
-        </ul>
-      </div>
-    );
-  }
-  
-// FUNCTIONS & METHODS SET-UP BY THIS POINT  ----------------------------------------
-// ----------------------------------------------------------------------------------
-// STANDARD RENDER FUNCTION ---------------------------------------------------------
+      <React.Fragment>
+        { subFolderContents }
+      </React.Fragment>
+    )
+  } 
 
   render() {
+
     return (
-      <div
-        className='dropdown dropdown--nested'
-        onClick={ this.handleDropdownToggle }
-      >
-        { this.printProps() }
-        { this.renderDisplay() }
-        {/* { this.renderSubMenu(this.props.options) } */}
-      </div>
+        <List          
+          component="nav"
+          subheadewir={<ListSubheader component="div"> RN-IDE </ListSubheader>}
+
+          >
+          { this.renderFolders() }
+        </List>
     );
   }
 }
@@ -183,7 +113,7 @@ class ProjectDropdown extends React.Component {
 function mapStateToProps(state) {
   return {
     selectedPath: state.leftPanelReducer.selectedPath,
-    pathContents: state.leftPanelReducer.pathContents
+    pathContents: state.leftPanelReducer.pathContents,
   };
 }
 function mapDispatchToProps(dispatch) {
@@ -197,16 +127,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ProjectDropdown);
-
-
-// return (
-//   <div id='left-panel-container'>
-//     { this.printProps() }
-//     <input 
-//       id='open-folder-button'
-//       type='button' 
-//       onClick={ this.printProps }
-//       value='Open a Folder 2'
-//     ></input>
-//   </div>
-// );

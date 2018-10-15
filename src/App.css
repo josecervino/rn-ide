@@ -16,9 +16,9 @@ App Container
 .App {
   display: grid;
   width: 100%;
-  grid-template-areas:'tree editor editor editor gui'
-                      'tree editor editor editor gui'
-                      'tree editor editor editor gui'
+  grid-template-areas:'left-panel editor editor editor gui'
+                      'left-panel editor editor editor gui'
+                      'left-panel editor editor editor gui'
                       'footer footer footer footer footer';
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 2em repeat(3, 1fr) 25px;
@@ -69,6 +69,7 @@ ul {
   overflow: hidden;
 }
 
+
 /*
 Footer Styling
 */
@@ -81,10 +82,17 @@ Footer Styling
 Tree Styling
 */
 .left-panel {
-  grid-area: tree;
+  grid-area: left-panel;
   background: #61616157;
   overflow-y: scroll;
-  /* justify-content: left; */
+  display: grid;
+  grid-template-areas: "project";
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+}
+#project-dropdown {
+  grid-area: "project";
+  overflow-y: scroll;
 }
 
 .gui {
