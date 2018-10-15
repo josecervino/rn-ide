@@ -10,6 +10,11 @@ export const getFileNames = filenames => ({
   payload: filenames
 });
 
+export const closeFile = filename => ({
+  type: 'CLOSE_FILE',
+  payload: filename
+});
+
 export const deleteFileName = filename => ({
   type: 'DELETE_FILE_NAME',
   payload: filename

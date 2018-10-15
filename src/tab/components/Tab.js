@@ -4,9 +4,14 @@ import {
   getFileNames,
   deleteFileName,
   deleteModel,
+  closeFile,
   setActiveModel, 
   setEditor } from "../../js/actions/action";
 import AddTab from "./AddTab";
+
+function CloseIcon() {
+  return <p id="close">&#10006;</p>;
+}   
 
 class Tab extends React.Component {
   constructor(props) {
@@ -15,9 +20,9 @@ class Tab extends React.Component {
   }
 
   onTabClick(filename) {
+    debugger;
     let model = this.props.models[filename]
     this.props.setActiveModel(model)
-    console.log('SWITCHED TABS: ACTIVE MODEL IS: ', this.props.activeModel);
   }
 
   handleClick(filename) {
@@ -38,20 +43,19 @@ class Tab extends React.Component {
     }
   }
 
-  CloseIcon() {
-    return <p id="close">&#10006;</p>;
-  }   
-
   render() {
+    // console.log("tab props", this.props);
+
     let filenames = this.props.filenames;
     if (!filenames || filenames.length === 0) {
       return (
-        <AddTab 
-          name="filename" 
-          close={this.CloseIcon()} 
-          filepath="" 
+        <AddTab
+          name="filename"
+          close={CloseIcon()}
+          filepath=""
+          allProps={this.props}
         />
-      )
+      );
     } else {
       return (
         <div className="tabContainer">
@@ -60,8 +64,8 @@ class Tab extends React.Component {
               key={index}
               filepath={filename}
               name={filename.replace(/^.*[\\\/]/, "")}
-              close={this.CloseIcon()}
-              onClick={() => this.handleClick(filename)}
+              close={CloseIcon()}
+              allProps={this.props}
               onTabClick={() => this.onTabClick(filename)}
             />
           ))}
@@ -88,6 +92,7 @@ function mapDispatchToProps(dispatch) {
     setEditor: editor => dispatch(setEditor(editor)),
     getFileNames: filenames => dispatch(getFileNames(filenames)),
     deleteFileName: filename => dispatch(deleteFileName(filename)),
+    closeFile: filename => dispatch(closeFile(filename)),
     setActiveModel: filename => dispatch(setActiveModel(filename)),
     deleteModel: filename => dispatch(deleteModel(filename))
   };

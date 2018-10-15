@@ -47,7 +47,7 @@ const editorReducer = (state = initialState, action) => {
       let filenamesMinusOne = [...state.filenames]
 
       filenamesMinusOne = filenamesMinusOne.filter((filename) => {
-        return filename !== action.payload
+        filename !== action.payload
       })
       return {
         ...state,
@@ -65,6 +65,17 @@ const editorReducer = (state = initialState, action) => {
           ...state,
           models: modelsMinusOne
       };
+    case "CLOSE_FILE":
+      const newState = { ...state };
+      console.log("previous state", newState);
+
+      newState.filenames = newState.filenames.filter(
+        element => element !== action.payload
+      );
+      console.log("state after click", newState);
+
+      return newState;
+    //loop through the file and delete the filename(via path) and model
     default:
       return state;
   }
