@@ -1,15 +1,19 @@
+
 import React from "react";
 import * as monaco from "monaco-editor";
-const fs = window.require("fs");
-const { ipcRenderer, dialog } = require("electron");
-
 import { connect } from "react-redux";
 import {
-  getFileName,
+  getFileNames,
   setEditor,
+  setActiveModel, 
+  addModels,
   setRange,
-  setCoords
+  setCoords,
+  
 } from "../../js/actions/action";
+
+const { ipcRenderer, dialog } = require("electron");
+const fs = window.require("fs");
 
 // const line1 = '<ActivityIndicatorIOS '
 // const line2 = 'style={{ '
@@ -45,13 +49,7 @@ class Editor extends React.Component {
         }
         return "../dist/editor.worker.bundle.js";
       }
-    };
-
-    const starterText = [
-      "function x() {",
-      '\tconsole.log("Whatup world!");',
-      "}"
-    ].join("\n");
+    };  
 
     const monacoEditor = monaco.editor.create(
       document.getElementById("editor-container"),
@@ -67,9 +65,7 @@ class Editor extends React.Component {
         automaticLayout: true
       }
     );
-
-    this.props.setEditor(monacoEditor);
-
+    this.props.setEditor(monacoEditor)
     // listen for main process msg to inject text
     ipcRenderer.on("inject-text", (event, arg) => {
       let selection = this.props.editor.getSelection();
@@ -123,36 +119,34 @@ class Editor extends React.Component {
     });
 
     // // display selected file from menu in text editor
-    ipcRenderer.on("open-file", (event, arg, filename) => {
-      // console.log("from editor", filename);
+    ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
+      let allModels = allFileNamesAndData.reduce((acc, fileNameAndData) => {
+        if (!acc[fileNameAndData[0]]) {
+          let model = monaco.editor.createModel(
+          fileNameAndData[1],
+          'javascript',
+          monaco.Uri.from({ path: fileNameAndData[0] }))
+          acc[model.uri.path] = model
+        }
+        return acc
+      }, {})
 
-      this.props.getFileName(filename);
+      this.props.addModels(allModels) 
 
-      this.props.editor.setValue(arg);
+      let allFilePaths = Object.keys(allModels)
+      this.props.getFileNames(allFilePaths);
+
+      let firstModel = allModels[allFilePaths[0]]
+      this.props.setActiveModel(firstModel)
+      this.props.editor.setModel(firstModel)
     });
+  
 
-    // FILE TREE EDITOR DEVELOPMENT
-    //     function openText() {
-    //       ipcRenderer.send("open-button-clicked");
-    //     }
-    //     //display the opened file in text editor
-    //     ipcRenderer.on('open-button-clicked', (event, arg) => {
-    //       monacoEditor.setValue(arg)
-    //     })
-
-    //   }
-
-    //    render() {
-    //     return (
-    //       <div id='editor-container'></div>
-    //     )
-
-    // listen for main process prompt to save file
     ipcRenderer.on("save-file", (event, arg) => {
       ipcRenderer.send(
         "save-file",
         this.props.editor.getValue(),
-        this.props.filename
+        this.props.filenames
       );
     });
   }
@@ -179,7 +173,9 @@ class Editor extends React.Component {
 function mapStateToProps(state) {
   return {
     editor: state.editorReducer.editor,
-    filename: state.editorReducer.filename,
+    filenames: state.editorReducer.filenames,
+    activeModel: state.editorReducer.activeModel,
+    // filename: state.editorReducer.filename,
     range: state.editorReducer.currentRange,
     coords: state.editorReducer.coords
   };
@@ -187,7 +183,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     setEditor: editor => dispatch(setEditor(editor)),
-    getFileName: filename => dispatch(getFileName(filename)),
+    getFileNames: filenames => dispatch(getFileNames(filenames)),
+    setActiveModel: filename => dispatch(setActiveModel(filename)),
+    addModels: models => dispatch(addModels(models)),
     setRange: range => dispatch(setRange(range)),
     setCoords: coords => dispatch(setCoords(coords))
   };

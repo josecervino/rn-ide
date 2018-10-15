@@ -1,5 +1,4 @@
 import React from "react";
-// import { RemoveTab } from "./RemoveTab";
 
 function removeTab(filepath, closeFile) {
   console.log("filename", filepath);
@@ -8,14 +7,17 @@ function removeTab(filepath, closeFile) {
 }
 
 export default function AddTab(props) {
-  // console.log("mad props", props);
+  console.log("mad props", props);
 
   return (
     <nav className="tabi">
       <ul>
         <li>
           <a className="tab_name">
-            <span className="tabName">{props.name}</span>
+
+            <span className="tabName" onClick={props.onTabClick} >
+              {props.name}
+            </span>
             <span
               className="closeX"
               onClick={() => {
@@ -27,6 +29,6 @@ export default function AddTab(props) {
           </a>
         </li>
       </ul>
-    </nav>
+    </nav>  
   );
 }
