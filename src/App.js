@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import "./App.css";
-import TreeContainer from "./filetree/TreeContainer";
-import EditorContainer from "./editor/editorContainer";
+import TreeContainer from './filetree/TreeContainer';
+import EditorContainer from './editor/editorContainer';
+import VisualEditor from './visualEditor/VisualEditor';
 import TabContainer from "./tab/TabContainer";
 
 class App extends Component {
@@ -12,7 +13,11 @@ class App extends Component {
           <TabContainer />
         </div>
 
-        <div className="editor">
+        <div className='gui'>
+          <VisualEditor />
+        </div>
+
+        <div className='editor'>
           <EditorContainer />
         </div>
 
@@ -23,6 +28,7 @@ class App extends Component {
         <div className="footer">
           <p> Footer. </p>
         </div>
+
       </div>
     );
   }

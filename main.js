@@ -5,13 +5,13 @@ const {
   shell,
   dialog,
   ipcMain
-} = require("electron");
-const fs = require("fs");
+} = require('electron');
+const fs = require('fs');
 const {
   default: installExtension,
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS
-} = require("electron-devtools-installer"); // Adding Redux & React dev tools to Electron
+} = require('electron-devtools-installer'); // Adding Redux & React dev tools to Electron
 
 //  CREATING THE WINDOW -----------------------------
 
@@ -43,7 +43,7 @@ function createWindow() {
 
 // inject text
 const injectText = function(text) {
-  mainWindow.webContents.send("inject-text", text);
+  mainWindow.webContents.send('inject-text', text);
 };
 
 //  FILE FUNCTIONS -----------------------------
@@ -65,6 +65,31 @@ const openFile = function() {
     }
 
     let allFileNamesAndData = [];
+
+
+
+    // ----
+    // let allModels = allFileNamesAndData.reduce((acc, fileNameAndData) => {
+    //   if (!acc[fileNameAndData[0]]) {
+    //     let model = monaco.editor.createModel(
+    //     fileNameAndData[1],
+    //     'javascript',
+    //     monaco.Uri.from({ path: fileNameAndData[0] }))
+    //     acc[model.uri.path] = model
+    //   }
+    //   return acc
+    // }, {})
+    // this.props.addModels(allModels) 
+
+    // let allFilePaths = Object.keys(allModels)
+    // this.props.getFileNames(allFilePaths);
+    // this.props.editor.setModel(allModels[allFilePaths[0]])
+
+
+
+    allFilesNamesAndData = fileNames.map(fileName => {
+      return 
+    })
 
     fileNames.forEach(fileName => {
       allFileNamesAndData.push(new Promise((resolve, reject) => {
@@ -88,22 +113,22 @@ const openFile = function() {
 
 // IN THE PROCESS OF SETTING UP LISTENER FOR OPENING FILE IN EDITOR
 function openFileClick(fileName) {
-  console.log("inside openFileClick");
-  console.log("openFileClick filename:", fileName);
+  console.log('inside openFileClick');
+  console.log('openFileClick filename:', fileName);
   // open file in text editor
-  fs.readFile(fileName, "utf-8", (err, data) => {
-    console.log("data in openFileClick:", data);
+  fs.readFile(fileName, 'utf-8', (err, data) => {
+    console.log('data in openFileClick:', data);
     if (err) {
-      console.log("main.js error found", err);
-      // alert("An error ocurred reading the file :" + err.message);
+      console.log('main.js error found', err);
+      // alert('An error ocurred reading the file :' + err.message);
       return;
     }
-    console.log("About to invoke mainWindow.webContents.send()");
+    console.log('About to invoke mainWindow.webContents.send()');
     // event.sender.send('open-button-clicked', data) // event not defined here
-    mainWindow.webContents.send("open-file", data);
+    mainWindow.webContents.send('open-file', data);
 
     // Change how to handle the file content
-    console.log("The file content is : " + data);
+    console.log('The file content is : ' + data);
     return data;
   });
 }
@@ -165,7 +190,7 @@ const menuTemplate = [
           process.platform === 'darwin' ? 'Cmd+S' : 'Ctrl+Shift+S'
       },
       {
-        label: "Inject!",
+        label: 'Inject!',
         click: () => {
           injectText();
         }
@@ -244,7 +269,7 @@ const menuTemplate = [
 
 if (process.platform === 'darwin') {
   menuTemplate.unshift({
-    label: app.getName(""),
+    label: app.getName(''),
     submenu: [
       { role: 'about' },
       { type: 'separator' },
@@ -294,7 +319,7 @@ ipcMain.on('save-button-clicked', (event, arg) => {
       if (err) {
         console.log('An error occurred creating the file ' + err.message);
       }
-      // console.log("File successfully saved.");
+      // console.log('File successfully saved.');
     });
   });
 });
@@ -313,19 +338,19 @@ ipcMain.on('open-button-clicked', event => {
         alert('An error ocurred reading the file :' + err.message);
         return;
       }
-      event.sender.send("open-button-clicked", data);
+      event.sender.send('open-button-clicked', data);
     });
   });
 });
 
-ipcMain.on("open-file-in-editor", (event, path) => {
+ipcMain.on('open-file-in-editor', (event, path) => {
   openFileClick(path);
 });
 
 //   mainWindow.webContents.send('open-file', data);
 
 //   // Change how to handle the file content
-//   console.log("The file content is : " + data);
+//   console.log('The file content is : ' + data);
 // });
 // });
 
@@ -336,12 +361,12 @@ ipcMain.on("open-file-in-editor", (event, path) => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
 
-app.on("ready", () => {
+app.on('ready', () => {
   [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
     // Adding the React & redux dev tools
     installExtension(extension)
       .then(name => console.log(`Added Extension: ${name}`))
-      .catch(err => console.log("An error occurred: ", err));
+      .catch(err => console.log('An error occurred: ', err));
   });
 });
 

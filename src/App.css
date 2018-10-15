@@ -1,18 +1,20 @@
-*, *:before, *:after  {
+/* *,
+*:before,
+*:after {
   padding: 0;
   margin: 0;
-  box-sizing: border-box; 
-}
+  box-sizing: border-box;
+} */
 
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-body {
+/* body {
   display: block;
   font-family: Roboto, sans-serif;
-}
+} */
 
 /*
 App Container
@@ -21,13 +23,17 @@ App Container
   display: grid;
   width: 100%;
   grid-template-areas:
-    "tree  tab  tab  tab  tab"
-    "tree editor editor editor editor"
-    "tree editor editor editor editor"
-    "tree editor editor editor editor"
-    "footer footer footer footer footer";
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 2em repeat(3, 1fr) 25px;
+    "tree tree tab tab tab tab tab tab tab gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui"
+    "tree tree editor editor editor editor editor editor editor gui gui gui";
+
+  /* "footer footer footer footer footer"; */
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 2em repeat(3, 1fr) 0.1fr;
 }
 
 /*
@@ -35,7 +41,7 @@ Editor Styling
 */
 .editor {
   grid-area: editor;
-  height: 75vh;
+  /* height: 75vh; */
 }
 
 /* Tab styles */
@@ -65,9 +71,21 @@ ul {
   text-decoration: none;
   padding: 1.05em 1em;
 }
-.tabi > ul > li > a span {
+.tabName {
   position: relative;
   top: 5px;
+}
+
+.tab_name:hover .closeX {
+  visibility: visible;
+}
+
+.closeX {
+  visibility: hidden;
+  color: white;
+  position: relative;
+  top: 5px;
+  left: 7px;
 }
 
 #editor-container {
@@ -91,19 +109,14 @@ Tree Styling
   grid-area: tree;
   background: #61616157;
   overflow-y: scroll;
-  /* justify-content: left; */
+  justify-content: left;
 }
-li {
-  font-size: 12px;
-  font-family: Arial, Helvetica, sans-serif;
-  cursor: pointer;
-  padding: 6px;
-  list-style: none;
-  color: #1f1f1f;
-}
-li:hover {
-  color: #3f3f3f;
-  font-weight: bold;
+
+.gui {
+  grid-area: gui;
+  background: #f5f5f5;
+  overflow-y: scroll;
+  max-height: 75vh;
 }
 
 #btn-updatefile {
