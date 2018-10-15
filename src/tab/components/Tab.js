@@ -7,45 +7,23 @@ function CloseIcon() {
   return <p id="close">&#10006;</p>;
 }
 
-function removeTab(filename) {
-  // closeFile();
-  // console.log("filename", filename);
-}
-
-// function AddTab(props) {
-//   console.log("mad props", props);
-
-//   return (
-//     <nav className="tabi">
-//       <ul>
-//         <li>
-//           <a className="tab_name">
-//             <span className="tabName">{props.name}</span>
-//             <span
-//               className="closeX"
-//               onClick={() => {
-//                 removeTab(props.name);
-//               }}
-//             >
-//               {props.close.props.children}
-//             </span>
-//           </a>
-//         </li>
-//       </ul>
-//     </nav>
-//   );
-// }
-
 class Tab extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
-    console.log("tab props", this.props);
+    // console.log("tab props", this.props);
 
     let filename = this.props.filename;
     if (!filename || filename.length === 0) {
-      return <AddTab name="filename" close={CloseIcon()} filepath="" />;
+      return (
+        <AddTab
+          name="filename"
+          close={CloseIcon()}
+          filepath=""
+          allProps={this.props}
+        />
+      );
     } else {
       return (
         <div className="tabContainer">
@@ -55,6 +33,7 @@ class Tab extends React.Component {
               filepath={ele}
               name={ele.replace(/^.*[\\\/]/, "")}
               close={CloseIcon()}
+              allProps={this.props}
             />
           ))}
         </div>
