@@ -7,7 +7,7 @@ import {
 const initialState = {
   editor: 'Unloaded editor',
   filename: '',
-  currentRange: 0,
+  currentRange: [],
   coords: {},
   editor: "Unloaded editor",
   filenames: [],
@@ -37,9 +37,11 @@ const editorReducer = (state = initialState, action) => {
         activeModel: activeModel
       };
     case SET_RANGE:
+    console.log('range in reducer', action.payload);
       return {
         ...state,
-        currentRange: action.payload,
+        // currentRange: action.payload,
+        currentRange: [...state.currentRange, action.payload],
       };
     case SET_COORDS:
       return {
@@ -53,7 +55,7 @@ const editorReducer = (state = initialState, action) => {
       };
     case SET_ITEM_RANGE: {
       const newState = { ...state };
-      newState.currentRange[action.item].range = action.payload;
+      newState.currentRange[action.currComp][action.item].range = action.payload;
       return newState;
     }
     default:

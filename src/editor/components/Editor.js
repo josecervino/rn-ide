@@ -34,10 +34,14 @@ import {
 const { ipcRenderer, dialog } = require('electron');
 
 class Editor extends React.Component {
+
   constructor (props){
     super(props)
     this.getRange = this.getRange.bind(this);
+    this.setDecorationChange = this.setDecorationChange.bind(this);
+    this.setInjectListener = this.setInjectListener.bind(this);
   }
+
   componentDidMount() {
     self.MonacoEnvironment = {
       getWorkerUrl: function(moduleId, label) {
@@ -72,112 +76,9 @@ class Editor extends React.Component {
       }
     );
     this.props.setEditor(monacoEditor)
+
     // listen for main process msg to inject text
-    ipcRenderer.on("inject-text", (event, arg) => {
-      // const decoration = this.props.editor.deltaDecorations([],
-      // [
-      //   { range: new monaco.Range(2,1,2,50), options: { inlineClassName: 'myInlineDecoration' }},
-      // ]);
-
-      // console.log('active model: ', this.props.activeModel);
-
-    const decoration = this.props.activeModel.deltaDecorations([],
-      [
-        { range: new monaco.Range(2,1,2,50), options: { inlineClassName: 'myInlineDecoration' }},
-      ]);
-      // console.log('decoration id', decoration[0]);
-      // console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
-
-      this.props.activeModel.onDidChangeDecorations((decorationEvent)=> {
-        const {
-          range,
-          activeModel,
-          setItemRange,
-          currentInput,
-          setInputValue,
-        } = this.props;
-        for (let item in range){
-          const id = range[item].decoration[0];
-          // const id = property.decoration[0];
-          // console.log({id});
-          const decorationRange = activeModel.getDecorationRange(id)
-          const oldRange = range[item].range
-          // console.log({oldRange});
-          // console.log({decorationRange});
-          if (decorationRange.endColumn !== range[item].range.endColumn){
-            console.log({oldRange});
-            console.log({decorationRange});
-            const currVal = activeModel.getValueInRange(decorationRange);
-            if (currentInput[item] !== currVal ){
-              setInputValue(item, currVal);
-            }
-            setItemRange(item, decorationRange)
-          }
-        }
-        // console.log({decorationEvent});
-        // console.log('decoration range', this.props.activeModel.getDecorationRange(decoration[0]));
-        //
-        // console.log('decoration changed');
-      })
-
-      let selection = this.props.editor.getSelection();
-    let range = new monaco.Range(
-      selection.startLineNumber,
-      selection.startColumn,
-      selection.endLineNumber,
-      selection.endColumn
-    );
-      // for (let i = 0; i < text.length; i++){
-      const space = '\t'
-      const offset = space.repeat(range.startColumn);
-      const endOffSet = space.repeat(range.startColumn - 1);
-      const text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`
-      const coord = {
-        alignItems: { lineStart: 2, lineEnd: 2, colStart: 14, colEnd: 20 },
-        justifyContent: { lineStart: 3, lineEnd: 3, colStart: 18, colEnd: 24 },
-        animating: { lineStart: 5, lineEnd: 5, colStart: 12, colEnd: 16 },
-        size: { lineStart: 6, lineEnd: 6, colStart: 8, colEnd: 13 },
-        color: { lineStart: 7, lineEnd: 7, colStart: 9, colEnd: 14 },
-      };
-      // console.log('text', text.split(''));
-
-      const textArr = text.split('')
-
-      // for (let i=0; i<textArr.length; i++){
-      //   if (textArr[i] === '\t') console.log('tab', textArr[i]);
-      // }
-
-      this.props.setCoords(coord);
-      // console.log({range});
-      let id = { major: 1, minor: 1 };
-      // const newRange =  new monaco.Range(
-      //   range.startLineNumber + i,
-      //   (range.startColumn),
-      //   range.endLineNumber + i,
-      //   (range.endColumn),
-      // )
-      let op = {
-        identifier: id,
-        range,
-        text: text,
-        forceMoveMarkers: true
-      };
-      // console.log({newRange});
-      // console.log({op});
-
-      // this.props.setCoords(coord);
-      monacoEditor.executeEdits("my-source", [op]);
-
-      // range.startLineNumber = (range.startLineNumber + this.props.coords.alignItems.lineStart)
-      // range.endLineNumber = (range.endLineNumber + this.props.coords.alignItems.lineEnd);
-      // range.startColumn = (range.startColumn + this.props.coords.alignItems.colStart);
-      // range.endColumn = (range.endColumn + this.props.coords.alignItems.colEnd);
-      const updatedRange = this.getRange(range, coord)
-      console.log({updatedRange});
-      this.props.setRange(updatedRange);
-    // }
-      ipcRenderer.send('save-file', this.props.editor.getValue())
-    })
+    this.setInjectListener(monacoEditor);
 
     // // display selected file from menu in text editor
     ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
@@ -240,6 +141,96 @@ class Editor extends React.Component {
       newRange[item] = { ...newRange[item], decoration };
     }
     return newRange;
+  }
+
+  setDecorationChange(){
+    this.props.activeModel.onDidChangeDecorations((decorationEvent)=> {
+
+      const {
+        range,
+        activeModel,
+        setItemRange,
+        currentInput,
+        setInputValue,
+      } = this.props;
+
+      console.log({range});
+      for (let i=0; i<range.length; i++){
+        for (let item in range[i]){
+          // console.log('range in set decoration', range[i][item]);
+          const id = range[i][item].decoration[0];
+
+          const decorationRange = activeModel.getDecorationRange(id)
+          const oldRange = range[i][item].range
+
+          if (decorationRange.endColumn !== range[i][item].range.endColumn && decorationRange.startLineNumber === range[i][item].range.startLineNumber){
+            console.log({oldRange});
+            console.log({decorationRange});
+            const currVal = activeModel.getValueInRange(decorationRange);
+            if (currentInput[item] !== currVal ){
+              setInputValue(item, currVal);
+            }
+            setItemRange(item, decorationRange, i)
+          }
+        }
+      }
+    })
+  }
+
+  setInjectListener(monacoEditor){
+    ipcRenderer.on("inject-text", (event, arg) => {
+      console.log({arg});
+      this.setDecorationChange()
+
+      let selection = this.props.editor.getSelection();
+      let range = new monaco.Range(
+      selection.startLineNumber,
+      selection.startColumn,
+      selection.endLineNumber,
+      selection.endColumn
+    );
+
+      const space = '\t'
+      const offset = space.repeat(range.startColumn);
+      const endOffSet = space.repeat(range.startColumn - 1);
+
+      let text = ''
+      let coord = {}
+      switch (arg){
+        case 'indicator':
+          console.log({arg});
+          text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`
+          coord = {
+            alignItems: { lineStart: 2, lineEnd: 2, colStart: 14, colEnd: 20 },
+            justifyContent: { lineStart: 3, lineEnd: 3, colStart: 18, colEnd: 24 },
+            animating: { lineStart: 5, lineEnd: 5, colStart: 12, colEnd: 16 },
+            size: { lineStart: 6, lineEnd: 6, colStart: 8, colEnd: 13 },
+            color: { lineStart: 7, lineEnd: 7, colStart: 9, colEnd: 14 },
+          };
+          break;
+        default:
+          text = '';
+          coord = {};
+      }
+
+      this.props.setCoords(coord);
+
+      let id = { major: 1, minor: 1 };
+
+      let op = {
+        identifier: id,
+        range,
+        text: text,
+        forceMoveMarkers: true
+      };
+
+      monacoEditor.executeEdits("my-source", [op]);
+
+      const updatedRange = this.getRange(range, coord)
+      // console.log({updatedRange});
+      this.props.setRange(updatedRange);
+      ipcRenderer.send('save-file', this.props.editor.getValue())
+    })
   }
 
   render() {

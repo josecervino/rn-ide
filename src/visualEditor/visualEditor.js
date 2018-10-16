@@ -73,8 +73,11 @@ class VisualEditor extends Component {
     this.changeText(event, 'color')
   }
 
-  changeText (event, item){
-    const range = { ...this.props.range[item].range };
+  changeText (event, item, currComp){
+    console.log({currComp});
+    console.log({item});
+    console.log({event});
+    const range = { ...this.props.range[currComp][item].range };
     console.log({range});
     this.props.editor.executeEdits('input', [
       { range: range, text: event.target.value }
@@ -111,9 +114,37 @@ class VisualEditor extends Component {
   }
 
   render() {
+    console.log('range in vizEditor:', this.props.range);
+    const components = []
+
+    for (let i=0; i<this.props.range.length; i++){
+      const singleComp = []
+      const keys = Object.keys(this.props.range[i])
+       for (let j=0; j<keys.length; j++){
+         singleComp.push(
+           <div
+             key={j}
+             >
+             <p>
+               {keys[j]}
+             </p>
+             <input
+               type="text"
+               onChange={(event) => {
+                 this.changeText(event, keys[j], i)
+               }}
+               value={this.props.input[keys[j]]}
+             />
+           </div>
+         )
+       }
+       components.push(singleComp);
+    }
+    console.log({components});
     return (
       <div style={{ marginTop: 10 }}>
-        <p>
+        {components}
+        {/* <p>
           Align:
         </p>
         <input
@@ -152,7 +183,7 @@ class VisualEditor extends Component {
           type="text"
           onChange={this.onChangeColor}
           value={this.props.color}
-        />
+        /> */}
         {/* <select value={this.props.selection} onChange={this.onChangeSelection}>
           <option value="center">Center</option>
           <option value="left">Left</option>
@@ -165,6 +196,7 @@ class VisualEditor extends Component {
 
 function mapStateToProps(state) {
   return {
+    input: state.vizEditorReducer.input,
     alignVal: state.vizEditorReducer.input.alignItems,
     justifyContent: state.vizEditorReducer.input.justifyContent,
     animating: state.vizEditorReducer.input.animating,
@@ -173,7 +205,7 @@ function mapStateToProps(state) {
     editor: state.editorReducer.editor,
     range: state.editorReducer.currentRange,
     selection: state.vizEditorReducer.selection,
-    coords: state.editorReducer.coords,
+    // coords: state.editorReducer.coords,
   };
 }
 function mapDispatchToProps(dispatch) {

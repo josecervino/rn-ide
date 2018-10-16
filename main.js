@@ -47,7 +47,7 @@ const injectText = function(text) {
 };
 
 //  FILE FUNCTIONS -----------------------------
-// create menu 
+// create menu
 const openFile = function() {
   const options = {
     title: 'Select Directory',
@@ -80,7 +80,7 @@ const openFile = function() {
         })
       }))
     })
-    
+
     allFileNamesAndData = await Promise.all(allFileNamesAndData)
     mainWindow.webContents.send('open-file', allFileNamesAndData);
   });
@@ -147,7 +147,7 @@ const menuTemplate = [
         click: () => {
           openFile();
         },
-        accelerator: 
+        accelerator:
           process.platform === 'darwin' ? 'Cmd+O' : 'Ctrl+Shift+O'
       },
       {
@@ -161,13 +161,13 @@ const menuTemplate = [
         click: () => {
           saveFile();
         },
-        accelerator: 
+        accelerator:
           process.platform === 'darwin' ? 'Cmd+S' : 'Ctrl+Shift+S'
       },
       {
-        label: "Inject!",
+        label: "Inject Indicator",
         click: () => {
-          injectText();
+          injectText('indicator');
         }
       }
     ]
