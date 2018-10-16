@@ -25,12 +25,12 @@ import { worker } from 'cluster';
 
 
 class ProjectDropdown extends React.Component {
-
   constructor(props) {
     super(props);
 
     this.state = {
       folderToggles: {},
+      folderContents: {},
       showDropdown: false,
       toggleButton: true
     }
@@ -38,25 +38,25 @@ class ProjectDropdown extends React.Component {
     this.renderSubFolders = this.renderSubFolders.bind(this);
   };
 
-  openFolder(currentPath, fileName) {
-    // console.log('inside openFolder');
-    // console.log('Current Path:', currentPath, 'File Name:', fileName);
+  openFile(currentPath, fileName) {
     ipcRenderer.send('open-file-in-editor', currentPath, fileName);
   }
 
-  handleDropdown(folderId) {
-    // console.log('inside handleDropdown')
-    // console.log(this.state.folderToggles[folderId])
+  handleDropdown(path, folderId) {
     this.state.folderToggles[folderId] = !this.state.folderToggles[folderId];
-    // console.log(this.state.folderToggles[folderId])
+    console.log('folder toggle:', this.state.folderToggles);
+
+    let folderContents = this.renderSubFolders(path, folderId);
+    let folder = Document.getElementById(folderId).append;
+    // console.log(folderContents, folder)
+    folder.innerHTML = folder.innerHTML + folderContents;  // not working, shouldn't be doing it this way
   }
 
   renderSubFolders(folderPath = this.props.selectedPath, id = null) {
-    // console.log('inside renderSubFolders', this.props.pathContents);
     let counter = 1;
     let options;
 
-    if (folderPath === this.props.selectedPath) {  // Handling whether this is the first tim
+    if (folderPath === this.props.selectedPath) {
       options = this.props.pathContents;
     }
     else {
@@ -72,8 +72,8 @@ class ProjectDropdown extends React.Component {
 
       if (fs.lstatSync(path).isFile()) {
         return (
-          <ListItem button onClick={() => this.openFolder(path, option) } path={ path } name={ option }>
-            <ListItemText inset primary={ option } />
+          <ListItem button onClick={() => this.openFile(path, option) } path={ path } name={ option }>
+            <ListItemText primary={ option } />
           </ListItem>
         )
       }
@@ -82,41 +82,44 @@ class ProjectDropdown extends React.Component {
         let compId = `${option}${counter}`;
         return (
           <React.Fragment>
-            <ListItem button id={ compId } onMouseOver={() => this.renderSubFolders(path, compId)} onClick={() => this.handleDropdown(compId)} path={ `${path}/`} name={ option }>
+            <ListItem button 
+              id={ compId } 
+              onClick={() => this.handleDropdown(compId)} 
+              path={ `${path}/`} 
+              name={ option }
+            >
               <ListItemIcon>
                 <ClosedFolder />
               </ListItemIcon>
               <ListItemText inset primary={ option } />
             </ListItem> 
-            { this.state.folderToggles[`${option}${counter}`] ? <ExpandLess/> : <ExpandMore /> } 
-            { console.log(this.state.folderToggles) }
-              <Collapse in={ this.state.folderToggles[`${option}${counter}`] } timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItem button >
-                    <ListItemText inset primary="FUCK YEAH BRO" />
-                  </ListItem>
-                </List>
-              </Collapse>
+            <Collapse 
+              in={ this.state.folderToggles[`${option}${counter}`] } 
+              timeout="auto" 
+              unmountOnExit
+            >
+              <List component='div' id={ `${compId}-2` } disablePadding>
+              </List>
+            </Collapse>
+
           </React.Fragment>
         )
       }
     });
-
 
     return (
       <React.Fragment>
         { subFolderContents }
       </React.Fragment>
     )
-  } 
+  }
 
   render() {
     return (
         <List          
           component="nav"
-          subheadewir={<ListSubheader component="div"> RN-IDE </ListSubheader>}
-
-          >
+          subheader={<ListSubheader component="div"> { this.props.folderName } </ListSubheader>}
+        >
           { this.renderSubFolders() }
         </List>
     );
@@ -127,6 +130,7 @@ function mapStateToProps(state) {
   return {
     selectedPath: state.leftPanelReducer.selectedPath,
     pathContents: state.leftPanelReducer.pathContents,
+    folderName: state.leftPanelReducer.folderName
   };
 }
 function mapDispatchToProps(dispatch) {

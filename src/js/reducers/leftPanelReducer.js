@@ -14,12 +14,9 @@ const initialState = {
 };
 
 const leftPanelReducer = (state = initialState, action) => {
-  // console.log('reached reducer')
   switch (action.type) {
 
     case 'GET_CONTENTS':
-      // console.log('Inside GET_CONTENTS case');
-      // console.log('GET_CONTENTS payload:', action.payload)
       let options = fs.readdirSync(action.payload);
       return {
         ...state,
@@ -27,11 +24,10 @@ const leftPanelReducer = (state = initialState, action) => {
       };
     
     case 'SET_PROJECT_PATH':
-      // console.log('Inside SET_PROJECT_PATH case');
-      // console.log('SET_PROJECT_PATH payload:', action.payload.payload)
       return {
         ...state,
-        selectedPath: action.payload.payload
+        selectedPath: action.payload.payload,
+        folderName: action.payload.payload.replace(/^.*[\\\/]/, ""),
       }
 
     default:
