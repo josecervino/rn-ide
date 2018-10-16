@@ -135,9 +135,10 @@ Tree Styling
   transition: 0.1s;
 }
 #open-folder-button:hover {
-  background: #747474;
+  background: #ded8ff;
+  opacity: .6;
   font-weight: bold;
-  border-radius: 15px;
+  border-radius: 10px;
 }
 
 /*

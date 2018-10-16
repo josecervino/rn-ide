@@ -18,17 +18,17 @@ class ProjectDropdown extends React.Component {
 
 // SETTING STATE UP, STATIC & LOCAL ------------------------------------------------------
 
-  // static propTypes = {  // STANDARD PROJECT-DROPDOWN FOLDER MODEL
-  //   openDirection: PropTypes.oneOf(['down', 'right']), // Direction of dropdown caret
-  //   displayText: PropTypes.string,  // Text displayed for element
-  //   hasCaret: PropTypes.bool,  // Boolean that adds caret or not 
-  //   options: PropTypes.arrayOf(PropTypes.shape(ProjectDropdown.shape)) // Array of submenu contents, file and folder names
-  // };
+  static propTypes = {  // STANDARD PROJECT-DROPDOWN FOLDER MODEL
+    openDirection: PropTypes.oneOf(['open', 'closed']), // Direction of dropdown caret
+    displayText: PropTypes.string,  // Text displayed for element
+    hasIcon: PropTypes.bool,  // Boolean that adds caret or not 
+    options: PropTypes.arrayOf(PropTypes.shape(ProjectDropdown.shape)) // Array of submenu contents, file and folder names
+  };
 
-  // static defaultProps = {  // Default props for every ProjectDropdown component, which is why it isn't explicitly required in propTypes
-  //   hasCaret: true,
-  //   openDirection: 'down'
-  // };
+  static defaultProps = {  // Default props for every ProjectDropdown component, which is why it isn't explicitly required in propTypes
+    hasIcon: true,
+    openState: 'open'
+  };
 
   shape = {  // FILE MODEL
     id: PropTypes.string.isRequired,  // Unique id for each element
@@ -105,7 +105,7 @@ class ProjectDropdown extends React.Component {
     // Passes in above classes constant as className, renders a caret if applicable & the display name
     // return (  // [ISSUE] Add folder methods and link/path
     //   <div className={ classes }>
-    //     { this.props.hasCaret ? caret : null }
+    //     { this.props.hasIcon ? icon : null }
     //     { this.props.displayText }
     //   </div>
     // )

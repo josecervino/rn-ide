@@ -6,6 +6,7 @@ import {
 } from '../js/actions/leftPanelActions'
 
 import ProjectDropdown from './components/ProjectDropdown';
+import Button from '@material-ui/core/Button';
 
 const { dialog } = require("electron").remote;
 
@@ -49,12 +50,14 @@ class LeftPanelContainer extends React.Component {
     else {
       return (
         <div id='left-panel-container'>
-          <input 
+          <Button 
             id='open-folder-button'
-            type='button' 
+            variant="outlined" 
+            color="primary" 
             onClick={ this.openFolder }
-            value='Open a Folder :)'
-          ></input>
+          >
+            Open a Folder
+          </Button>
         </div>
       )
     }
