@@ -35,26 +35,38 @@ class ProjectDropdown extends React.Component {
       toggleButton: true
     }
     this.handleDropdown = this.handleDropdown.bind(this);
-    this.renderFolders = this.renderFolders.bind(this);
+    this.renderSubFolders = this.renderSubFolders.bind(this);
   };
 
   openFolder(currentPath, fileName) {
-    console.log('inside openF');
+    // console.log('inside openFolder');
+    // console.log('Current Path:', currentPath, 'File Name:', fileName);
     ipcRenderer.send('open-file-in-editor', currentPath, fileName);
   }
 
   handleDropdown(folderId) {
-    console.log('inside handleDropdown')
-    console.log(this.state.folderToggles[folderId])
+    // console.log('inside handleDropdown')
+    // console.log(this.state.folderToggles[folderId])
     this.state.folderToggles[folderId] = !this.state.folderToggles[folderId];
-    console.log(this.state.folderToggles[folderId])
+    // console.log(this.state.folderToggles[folderId])
   }
 
-  renderSubFolders(folderPath, id = null) {
+  renderSubFolders(folderPath = this.props.selectedPath, id = null) {
+    // console.log('inside renderSubFolders', this.props.pathContents);
     let counter = 1;
-    let options = this.props.pathContents ? this.props.pathContents : fs.readdirSync(folderPath); 
+    let options;
+
+    if (folderPath === this.props.selectedPath) {  // Handling whether this is the first tim
+      options = this.props.pathContents;
+    }
+    else {
+      options = fs.readdirSync(folderPath);
+    }
+
+    console.log(options);
 
     const subFolderContents = options.map((option) => {
+
       let path = `${folderPath}/${option}`;
       counter += 1;
 
@@ -75,8 +87,9 @@ class ProjectDropdown extends React.Component {
                 <ClosedFolder />
               </ListItemIcon>
               <ListItemText inset primary={ option } />
-            </ListItem>
-            { this.state.folderToggles[`${option}${counter}`] ? <ExpandLess/> : <ExpandMore /> }
+            </ListItem> 
+            { this.state.folderToggles[`${option}${counter}`] ? <ExpandLess/> : <ExpandMore /> } 
+            { console.log(this.state.folderToggles) }
               <Collapse in={ this.state.folderToggles[`${option}${counter}`] } timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   <ListItem button >
@@ -89,6 +102,7 @@ class ProjectDropdown extends React.Component {
       }
     });
 
+
     return (
       <React.Fragment>
         { subFolderContents }
@@ -97,14 +111,13 @@ class ProjectDropdown extends React.Component {
   } 
 
   render() {
-
     return (
         <List          
           component="nav"
           subheadewir={<ListSubheader component="div"> RN-IDE </ListSubheader>}
 
           >
-          { this.renderFolders() }
+          { this.renderSubFolders() }
         </List>
     );
   }

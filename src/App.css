@@ -23,15 +23,13 @@ App Container
   display: grid;
   width: 100%;
   grid-template-areas:
-    "tree tree tab tab tab tab tab tab tab gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui";
-
-  /* "footer footer footer footer footer"; */
+    "left-panel left-panel tab tab tab tab tab tab tab gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui";
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 2em repeat(3, 1fr) 0.1fr;
 }

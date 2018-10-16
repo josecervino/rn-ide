@@ -14,7 +14,7 @@ const initialState = {
 };
 
 const leftPanelReducer = (state = initialState, action) => {
-  console.log('reached reducer')
+  // console.log('reached reducer')
   switch (action.type) {
 
     case 'GET_CONTENTS':
@@ -28,7 +28,7 @@ const leftPanelReducer = (state = initialState, action) => {
     
     case 'SET_PROJECT_PATH':
       // console.log('Inside SET_PROJECT_PATH case');
-      console.log('SET_PROJECT_PATH payload:', action.payload.payload)
+      // console.log('SET_PROJECT_PATH payload:', action.payload.payload)
       return {
         ...state,
         selectedPath: action.payload.payload

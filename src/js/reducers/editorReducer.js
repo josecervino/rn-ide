@@ -9,7 +9,7 @@ const initialState = {
   currentRange: 0,
   coords: {}
 };
-``
+
 const editorReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_EDITOR':

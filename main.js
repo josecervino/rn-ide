@@ -59,6 +59,7 @@ const openFile = function() {
   };
 
   dialog.showOpenDialog(options, async (fileNames) => {
+    console.log('inside openFile dialog')
     if (fileNames === undefined) {
       console.log(`You didn't save the file`);
       return;
@@ -85,8 +86,8 @@ const openFile = function() {
     // this.props.getFileNames(allFilePaths);
     // this.props.editor.setModel(allModels[allFilePaths[0]])
 
-
-
+    console.log('inside openFile()')
+    console.log('main.js:', fileNames)
     allFilesNamesAndData = fileNames.map(fileName => {
       return 
     })
@@ -106,25 +107,29 @@ const openFile = function() {
       }))
     })
     
+    
     allFileNamesAndData = await Promise.all(allFileNamesAndData)
+
+    console.log('main.js open-file:', allFileNamesAndData)
+    
     mainWindow.webContents.send('open-file', allFileNamesAndData);
   });
 };
 
-function openFileFromTree(fileName) {
+function openFileFromTree(path, fileName) {
   console.log('inside openFileClick');
-  console.log('openFileClick filename:', fileName);
+  console.log('openFileClick filename:', path);
     // open file in text editor
-    fs.readFile(fileName, 'utf-8', (err, data) => {
+    fs.readFile(path, 'utf-8', (err, data) => {
       console.log('data in openFileClick:', data);
       if (err) {
         console.log('main.js error found', err);
         return;
       }
       console.log('About to invoke mainWindow.webContents.send()');
-
+      let fileNameAndData = [[path, data]];
       // passing in file with root as fileName
-      mainWindow.webContents.send('open-file', data, fileName);
+      mainWindow.webContents.send('open-file', fileNameAndData);
       
       // Change how to handle the file content
       console.log("The file content is : " + data);
@@ -342,8 +347,9 @@ ipcMain.on('open-button-clicked', event => {
   });
 });
 
-ipcMain.on('open-file-in-editor', (event, path) => {
-  openFileFromTree(path);
+ipcMain.on('open-file-in-editor', (event, path, fileName) => {
+  console.log('inside open-file-in-editor')
+  openFileFromTree(path, fileName);
 })
 
 //   mainWindow.webContents.send('open-file', data);

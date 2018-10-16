@@ -27,22 +27,21 @@ class LeftPanelContainer extends React.Component {
           ipcRenderer.send('open-file-in-editor', path, fileName);
         }
         else {
-          console.log('about to call getContents')
+          // console.log('about to call getContents')
           this.props.getContents(path)
-          console.log('Props after .getContents, before setProjectPath:', this.props)
+          // console.log('Props after .getContents, before setProjectPath:', this.props)
           this.props.setProjectPath(path) // Separated in case either needs to be used independently in the future
-          console.log('Props after getContents & setProjectPath:', this.props)
+          // console.log('Props after getContents & setProjectPath:', this.props)
         }
       }
     )  // End of dialog box
   }
 
   render() {
-    console.log('About to render LeftPanelContainer', '|  Props:', this.props)
+    // console.log('About to render LeftPanelContainer', '|  Props:', this.props)
     if (this.props.selectedPath && this.props.pathContents.length >= 0) {
       return (
         <div id='left-panel-container'>
-          { console.log('About to render ProjectDropdown') }
           <ProjectDropdown />
         </div>
       )

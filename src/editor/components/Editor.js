@@ -120,6 +120,7 @@ class Editor extends React.Component {
 
     // // display selected file from menu in text editor
     ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
+
       let allModels = allFileNamesAndData.reduce((acc, fileNameAndData) => {
         if (!acc[fileNameAndData[0]]) {
           let model = monaco.editor.createModel(
@@ -128,7 +129,7 @@ class Editor extends React.Component {
           monaco.Uri.from({ path: fileNameAndData[0] }))
           acc[model.uri.path] = model
         }
-        return acc
+        return acc;
       }, {})
 
       this.props.addModels(allModels) 
