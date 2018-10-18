@@ -3,10 +3,8 @@ import * as monaco from "monaco-editor";
 
 function removeTab(filepath, closeFile, allProps) {
   closeFile(filepath); // delete filename and model
-  
   let stateModelToDelete = allProps.models[filepath]
   let allModels = monaco.editor.getModels() 
-
   // find model to be deleted from non-state monaco editor
   // and dispose 
   let monacoModelToDelete = allModels.find(model => {
@@ -17,16 +15,17 @@ function removeTab(filepath, closeFile, allProps) {
 
   // if closing current tab 
   if (filepath === allProps.activeModel.uri.path) {
-    // check if last tab aka filenames.length === 1 
+
+    // and current tab is only one open
     if (allProps.filenames.length === 1) {
       allProps.editor.setModel(null)
 
     } else { // if more than one tab is open 
       let allModels = allProps.models 
       let randomModel;
+
       for (let key in allProps.models) {
         if (key != filepath) randomModel = allModels[key]
-        else randomModel = null
       }
 
       if (randomModel) {
