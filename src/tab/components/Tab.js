@@ -20,32 +20,35 @@ class Tab extends React.Component {
   }
 
   onTabClick(filename) {
-    debugger;
     let model = this.props.models[filename]
     this.props.setActiveModel(model)
   }
 
   handleClick(filename) {
-    this.props.deleteFileName(filename)
-    this.props.deleteModel(filename)
+    this.props.deleteFileName(filename) // this works properly
+    this.props.deleteModel(filename) // this seems to be working
 
+    let firstModel = this.props.models[this.props.filenames[0]]
+    this.props.setActiveModel(firstModel)
+    this.props.filenames ? this.props.setActiveModel(firstModel) : this.props.setActiveModel(null)
+    
     // if closing the current tab
     if (filename === this.props.activeModel.uri.path) {
-      // if current tab is the last tab - this seems brittle way to determine
-     if (this.props.filenames.length === 1) {
+      if (!this.props.filenames.length) {
         this.props.setActiveModel(null)
-        // if there are other tabs open, reset model to some other, arbitrarily-chosen model
       } else {
         let firstModel = this.props.models[this.props.filenames[0]]
-        // this is not actually setting - getting blank 
         this.props.setActiveModel(firstModel)
+        this.props.filenames ? this.props.setActiveModel(firstModel) : this.props.setActiveModel(null)
       }
+    } else {
+      let firstModel = this.props.models[this.props.filenames[0]]
+        this.props.setActiveModel(firstModel)
+        this.props.filenames ? this.props.setActiveModel(firstModel) : this.props.setActiveModel(null)
     }
   }
 
   render() {
-    // console.log("tab props", this.props);
-
     let filenames = this.props.filenames;
     if (!filenames || filenames.length === 0) {
       return (
@@ -66,6 +69,7 @@ class Tab extends React.Component {
               name={filename.replace(/^.*[\\\/]/, "")}
               close={CloseIcon()}
               allProps={this.props}
+              onClick={() => this.handleClick(filename)}
               onTabClick={() => this.onTabClick(filename)}
             />
           ))}

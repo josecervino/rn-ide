@@ -44,14 +44,12 @@ const editorReducer = (state = initialState, action) => {
         coords: action.payload
       };
     case 'DELETE_FILE_NAME':
-      let filenamesMinusOne = [...state.filenames]
-
-      filenamesMinusOne = filenamesMinusOne.filter((filename) => {
+      updatedFilenames = updatedFilenames.filter(filename => 
         filename !== action.payload
-      })
+      )
       return {
         ...state,
-        filenames: filenamesMinusOne
+        filenames: updatedFilenames
       };
     case 'ADD_MODELS':
       return {
@@ -59,23 +57,26 @@ const editorReducer = (state = initialState, action) => {
         models: {...state.models, ...action.payload}
       };
     case 'DELETE_MODEL':
-      let modelsMinusOne = {...state.models}
+      state.editor.getModel(action.payload).dispose() 
       delete modelsMinusOne[action.payload]
       return {
           ...state,
-          models: modelsMinusOne
+          models: modelsMinusOne,
       };
     case "CLOSE_FILE":
-      const newState = { ...state };
-      console.log("previous state", newState);
-
-      newState.filenames = newState.filenames.filter(
-        element => element !== action.payload
-      );
-      console.log("state after click", newState);
-
-      return newState;
-    //loop through the file and delete the filename(via path) and model
+      let updatedFilenames = [...state.filenames]
+    
+      updatedFilenames = updatedFilenames.filter(filename => 
+        filename !== action.payload
+      )
+    
+      let modelsMinusOne = {...state.models}
+      delete modelsMinusOne[action.payload]
+      return {
+        ...state,
+        filenames: updatedFilenames,
+        models: modelsMinusOne,
+      };
     default:
       return state;
   }
