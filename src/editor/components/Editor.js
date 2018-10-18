@@ -65,6 +65,7 @@ class Editor extends React.Component {
         automaticLayout: true
       }
     );
+
     this.props.setEditor(monacoEditor)
     // listen for main process msg to inject text
     ipcRenderer.on("inject-text", (event, arg) => {
@@ -121,7 +122,7 @@ class Editor extends React.Component {
     // // display selected file from menu in text editor
     ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
       let allModels = allFileNamesAndData.reduce((acc, fileNameAndData) => {
-        if (!acc[fileNameAndData[0]]) {
+        if (!this.props.models[fileNameAndData[0]]) {
           let model = monaco.editor.createModel(
           fileNameAndData[1],
           'javascript',
@@ -132,7 +133,6 @@ class Editor extends React.Component {
       }, {})
 
       this.props.addModels(allModels) 
-
       let allFilePaths = Object.keys(allModels)
       this.props.getFileNames(allFilePaths);
 
@@ -141,12 +141,11 @@ class Editor extends React.Component {
       this.props.editor.setModel(firstModel)
     });
   
-
     ipcRenderer.on("save-file", (event, arg) => {
       ipcRenderer.send(
         "save-file",
         this.props.editor.getValue(),
-        this.props.filenames
+        this.props.activeModel.uri.path
       );
     });
   }
@@ -175,6 +174,7 @@ function mapStateToProps(state) {
     editor: state.editorReducer.editor,
     filenames: state.editorReducer.filenames,
     activeModel: state.editorReducer.activeModel,
+    models: state.editorReducer.models,
     // filename: state.editorReducer.filename,
     range: state.editorReducer.currentRange,
     coords: state.editorReducer.coords
@@ -194,6 +194,5 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Editor);
-
-// export default Editor;
+  )(Editor);
+  

@@ -66,8 +66,8 @@ const openFile = function() {
 
     let allFileNamesAndData = [];
 
-
-
+    // should check for all existing models first, then only create if
+    // the model doesn't already exist
     // ----
     // let allModels = allFileNamesAndData.reduce((acc, fileNameAndData) => {
     //   if (!acc[fileNameAndData[0]]) {
@@ -86,10 +86,9 @@ const openFile = function() {
     // this.props.editor.setModel(allModels[allFilePaths[0]])
 
 
-
-    allFilesNamesAndData = fileNames.map(fileName => {
-      return 
-    })
+//     allFilesNamesAndData = fileNames.map(fileName => {
+//       return 
+//     })
 
     fileNames.forEach(fileName => {
       allFileNamesAndData.push(new Promise((resolve, reject) => {
@@ -97,10 +96,10 @@ const openFile = function() {
           if (err) {
             console.log('An error occurred reading the file : ', err.message);
             reject(err)
-          }
-          else {
+          } 
+          else { 
             resolve([fileName, fileContents])
-          }
+          } 
           // console.log('allFileNamesAndData so far: ', allFileNamesAndData);
         })
       }))
@@ -145,14 +144,16 @@ const saveAs = function(fileNames) {
 
 const saveFile = function(fileName) {
   mainWindow.webContents.send('save-file');
-
+  // console.log('filename line 148 is: ', fileName);
   ipcMain.on('save-file', (event, fileContents, currentFileName) => {
     // save data from text editor to file
-    console.log('in main save-file', fileContents);
-    console.log('in main save-file, currentFileName', currentFileName);
+    // console.log('in main save-file, 151: ', fileContents);
+    // console.log('in main save-file, currentFileName is: ', currentFileName);
     fs.writeFile(fileName ? fileName : currentFileName, fileContents, err => {
-      console.log({ fileName });
-      console.log({ currentFileName });
+      // console.log('in write file, file name is:', fileName);
+      // console.log('');
+      // console.log('line 156, {fileName}:', { fileName });
+      // console.log({ currentFileName });
       if (err) {
         console.log('An error occurred creating the file ', err.message);
       }
@@ -177,8 +178,8 @@ const menuTemplate = [
       },
       {
         label: 'Save as...',
-        click: () => {
-          saveAs();
+        click: (e) => {
+          saveAs(e);
         }
       },
       {
@@ -319,7 +320,7 @@ ipcMain.on('save-button-clicked', (event, arg) => {
       if (err) {
         console.log('An error occurred creating the file ' + err.message);
       }
-      // console.log('File successfully saved.');
+      console.log('File successfully saved.');
     });
   });
 });
