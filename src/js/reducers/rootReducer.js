@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import editorReducer from './editorReducer';
-import fileTreeReducer from './fileTreeReducer';
+import leftPanelReducer from './leftPanelReducer';
 import vizEditorReducer from './vizEditorReducer';
 
 export default combineReducers({
   editorReducer,
   vizEditorReducer,
-  fileTreeReducer,
+  leftPanelReducer,
 });

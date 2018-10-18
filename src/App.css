@@ -23,15 +23,13 @@ App Container
   display: grid;
   width: 100%;
   grid-template-areas:
-    "tree tree tab tab tab tab tab tab tab gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui"
-    "tree tree editor editor editor editor editor editor editor gui gui gui";
-
-  /* "footer footer footer footer footer"; */
+    "left-panel left-panel tab tab tab tab tab tab tab gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui"
+    "left-panel left-panel editor editor editor editor editor editor editor gui gui gui";
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 2em repeat(3, 1fr) 0.1fr;
 }
@@ -94,6 +92,7 @@ ul {
   overflow: hidden;
 }
 
+
 /*
 Footer Styling
 */
@@ -105,11 +104,18 @@ Footer Styling
 /*
 Tree Styling
 */
-.tree {
-  grid-area: tree;
+.left-panel {
+  grid-area: left-panel;
   background: #61616157;
   overflow-y: scroll;
-  justify-content: left;
+  display: grid;
+  grid-template-areas: "project";
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+}
+#project-dropdown {
+  grid-area: "project";
+  overflow-y: scroll;
 }
 
 .gui {
@@ -128,10 +134,11 @@ Tree Styling
   border-radius: 3px;
   transition: 0.1s;
 }
-#btn-updatefile:hover {
-  background: #747474;
+#open-folder-button:hover {
+  background: #ded8ff;
+  opacity: .6;
   font-weight: bold;
-  border-radius: 15px;
+  border-radius: 10px;
 }
 
 /*

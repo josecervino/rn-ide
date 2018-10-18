@@ -121,6 +121,7 @@ class Editor extends React.Component {
 
     // // display selected file from menu in text editor
     ipcRenderer.on('open-file', (event, allFileNamesAndData) => {
+
       let allModels = allFileNamesAndData.reduce((acc, fileNameAndData) => {
         if (!this.props.models[fileNameAndData[0]]) {
           let model = monaco.editor.createModel(
@@ -129,7 +130,7 @@ class Editor extends React.Component {
           monaco.Uri.from({ path: fileNameAndData[0] }))
           acc[model.uri.path] = model
         }
-        return acc
+        return acc;
       }, {})
 
       this.props.addModels(allModels) 
@@ -169,7 +170,7 @@ class Editor extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state) {  //automatically called whenever there's been a change to state
   return {
     editor: state.editorReducer.editor,
     filenames: state.editorReducer.filenames,
@@ -180,7 +181,7 @@ function mapStateToProps(state) {
     coords: state.editorReducer.coords
   };
 }
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {  //adding these functions to prop
   return {
     setEditor: editor => dispatch(setEditor(editor)),
     getFileNames: filenames => dispatch(getFileNames(filenames)),

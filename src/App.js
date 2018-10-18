@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import "./App.css";
-import TreeContainer from './filetree/TreeContainer';
+import "./App.css"; 
+import LeftPanelContainer from './leftPanel/LeftPanelContainer';
 import EditorContainer from './editor/editorContainer';
 import VisualEditor from './visualEditor/VisualEditor';
 import TabContainer from "./tab/TabContainer";
@@ -21,8 +21,8 @@ class App extends Component {
           <EditorContainer />
         </div>
 
-        <div className="tree">
-          <TreeContainer />
+        <div className='left-panel'>
+          <LeftPanelContainer />
         </div>
 
         <div className="footer">

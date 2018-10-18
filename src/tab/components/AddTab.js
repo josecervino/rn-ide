@@ -38,7 +38,7 @@ function removeTab(filepath, closeFile, allProps) {
 }
 
 export default function AddTab(props) {
-  console.log("mad props", props);
+  console.log("AddTab props", props);
 
   return (
     <nav className="tabi">
