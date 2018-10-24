@@ -124,7 +124,7 @@ class Editor extends React.Component {
     });
   }
 
-  getRange (inputRange, coordinates) {
+  getRange (inputRange, coordinates, input) {
     const newRange = {}
     for (let item in coordinates){
       const range = { ...inputRange };
@@ -138,7 +138,7 @@ class Editor extends React.Component {
         [
           { range: range, options: { inlineClassName: 'myInlineDecoration' }},
         ]);
-      newRange[item] = { ...newRange[item], decoration };
+      newRange[item] = { ...newRange[item], decoration, input: '' };
     }
     return newRange;
   }
@@ -154,7 +154,7 @@ class Editor extends React.Component {
         setInputValue,
       } = this.props;
 
-      console.log({range});
+      // console.log({range});
       for (let i=0; i<range.length; i++){
         for (let item in range[i]){
           // console.log('range in set decoration', range[i][item]);
@@ -164,12 +164,16 @@ class Editor extends React.Component {
           const oldRange = range[i][item].range
 
           if (decorationRange.endColumn !== range[i][item].range.endColumn && decorationRange.startLineNumber === range[i][item].range.startLineNumber){
-            console.log({oldRange});
-            console.log({decorationRange});
+            // console.log({oldRange});
+            // console.log({decorationRange});
             const currVal = activeModel.getValueInRange(decorationRange);
-            if (currentInput[item] !== currVal ){
-              setInputValue(item, currVal);
+            if (range[i][item].input !== currVal ){
+              console.log('index in setDecorationChange', i);
+              console.log('input in setDecorationChange', range[i][item].input);
+              console.log({currVal});
+              setInputValue(item, currVal, i);
             }
+            // console.log({i});
             setItemRange(item, decorationRange, i)
           }
         }
@@ -179,7 +183,7 @@ class Editor extends React.Component {
 
   setInjectListener(monacoEditor){
     ipcRenderer.on("inject-text", (event, arg) => {
-      console.log({arg});
+      // console.log({arg});
       this.setDecorationChange()
 
       let selection = this.props.editor.getSelection();
@@ -198,7 +202,7 @@ class Editor extends React.Component {
       let coord = {}
       switch (arg){
         case 'indicator':
-          console.log({arg});
+          // console.log({arg});
           text = `<ActivityIndicatorIOS\n${offset}style={{\n${offset}alignItems: 'center',\n${offset}justifyContent: 'center',\n${offset}}}\n${offset}animating={true}\n${offset}size={'small'}\n${offset}color={'black'}\n${endOffSet}/>`
           coord = {
             alignItems: { lineStart: 2, lineEnd: 2, colStart: 14, colEnd: 20 },
@@ -225,7 +229,13 @@ class Editor extends React.Component {
       };
 
       monacoEditor.executeEdits("my-source", [op]);
-
+      // const input = {
+      //   alignItems: '',
+      //   justifyContent: '',
+      //   animating: '',
+      //   size: '',
+      //   color: '',
+      // }
       const updatedRange = this.getRange(range, coord)
       // console.log({updatedRange});
       this.props.setRange(updatedRange);
@@ -246,7 +256,7 @@ function mapStateToProps(state) {
     coords: state.editorReducer.coords,
     filenames: state.editorReducer.filenames,
     activeModel: state.editorReducer.activeModel,
-    currentInput: state.vizEditorReducer.input,
+    // currentInput: state.editorReducer.currentRange,
   };
 }
 function mapDispatchToProps(dispatch) {
@@ -258,8 +268,8 @@ function mapDispatchToProps(dispatch) {
     getFileNames: filenames => dispatch(getFileNames(filenames)),
     setActiveModel: filename => dispatch(setActiveModel(filename)),
     addModels: models => dispatch(addModels(models)),
-    setItemRange: (item, range) => dispatch(setItemRange(item, range)),
-    setInputValue: (item, input) => dispatch(setInputValue(item, input)),
+    setItemRange: (item, range, currComp) => dispatch(setItemRange(item, range, currComp)),
+    setInputValue: (item, input, currComp) => dispatch(setInputValue(item, input, currComp)),
   };
 }
 

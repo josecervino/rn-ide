@@ -74,19 +74,25 @@ class VisualEditor extends Component {
   }
 
   changeText (event, item, currComp){
-    console.log({currComp});
-    console.log({item});
-    console.log({event});
+    console.log('currComp in changeText', currComp);
+    console.log('item in changeText', item);
+    console.log('event value:', event.target.value);
+    console.log('input:', this.props.input);
+    // console.log('input in changeText', );
+    // console.log({item});
+    // console.log({event});
     const range = { ...this.props.range[currComp][item].range };
-    console.log({range});
+    // console.log({range});
+    this.props.setInputValue(item, event.target.value, currComp);
+    console.log('input after update', this.props.input[currComp][item]);
     this.props.editor.executeEdits('input', [
-      { range: range, text: event.target.value }
+      { range: range, text: this.props.input[currComp][item] }
     ]);
     // let selection =  new monaco.Selection(this.props.range)
     // console.log({selection});
     // this.props.editor.setSelection(selection)
     // console.log({event});
-    this.props.setInputValue(item, event.target.value);
+    // console.log({currComp});
     // const range = {
     //   startLineNumber: 1,
     //   startColumn: 1,
@@ -114,13 +120,15 @@ class VisualEditor extends Component {
   }
 
   render() {
-    console.log('range in vizEditor:', this.props.range);
+    // console.log('range in vizEditor:', this.props.range);
     const components = []
 
     for (let i=0; i<this.props.range.length; i++){
       const singleComp = []
-      const keys = Object.keys(this.props.range[i])
+      const keys = Object.keys(this.props.input[i])
+      console.log({keys});
        for (let j=0; j<keys.length; j++){
+         // console.log('input in rener', this.props.range[i][keys[j]]);
          singleComp.push(
            <div
              key={j}
@@ -131,16 +139,18 @@ class VisualEditor extends Component {
              <input
                type="text"
                onChange={(event) => {
+                 // console.log('input', this.props.input);
+                 console.log({i});
                  this.changeText(event, keys[j], i)
                }}
-               value={this.props.input[keys[j]]}
+               value={this.props.input[i][keys[j]]}
              />
            </div>
          )
        }
        components.push(singleComp);
     }
-    console.log({components});
+    // console.log({components});
     return (
       <div style={{ marginTop: 10 }}>
         {components}
@@ -196,7 +206,7 @@ class VisualEditor extends Component {
 
 function mapStateToProps(state) {
   return {
-    input: state.vizEditorReducer.input,
+    input: state.editorReducer.input,
     alignVal: state.vizEditorReducer.input.alignItems,
     justifyContent: state.vizEditorReducer.input.justifyContent,
     animating: state.vizEditorReducer.input.animating,
@@ -210,7 +220,7 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    setInputValue: (item, input) => dispatch(setInputValue(item, input)),
+    setInputValue: (item, input, currComp) => dispatch(setInputValue(item, input, currComp)),
     setRange: range => dispatch(setRange(range)),
     setSelection: selection => dispatch(setSelection(selection)),
   };

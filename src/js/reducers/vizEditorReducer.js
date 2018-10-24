@@ -8,17 +8,13 @@ const initialInput = {
   color: '',
 }
 const initialState = {
-  input: initialInput,
+  input: [],
   range: 9,
   selection: 'center',
 };
 
 const vizEditorReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_INPUT:
-      const newState = { ...state };
-      newState.input[action.item] = action.payload;
-      return newState;
     case SET_SELECTION:
       // console.log('selection payload', action.payload);
       return {

@@ -39,9 +39,12 @@ export const addModels = models => ({
   payload: models
 });
 
-export const setItemRange = (item, range, currComp) => ({
-  type: SET_ITEM_RANGE,
-  item,
-  currComp,
-  payload: range,
-});
+export const setItemRange = (item, range, currComp) => {
+  // console.log({currComp});
+  return {
+    type: SET_ITEM_RANGE,
+    item,
+    currComp,
+    payload: range,
+  }
+};
