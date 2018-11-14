@@ -1,1 +1,3 @@
-A React Native IDE.
+# RN_IDE Public Repo
+
+Under Development.
